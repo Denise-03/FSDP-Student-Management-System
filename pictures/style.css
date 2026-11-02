@@ -43,7 +43,7 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 18px 14px;
+  padding: 18px 20px;
   background: #a6b6ce;
   border: 1px solid white;
   border-radius: 16px;
@@ -71,6 +71,8 @@ header {
 }
 
 .event-tags {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -79,6 +81,7 @@ header {
 
 .event-tag {
   font-size: 9px;
+  font-weight: bold;
   color: #2f3e34;
   background: white;
   border-radius: 999px;
@@ -100,7 +103,7 @@ header {
 }
 
 .event-btn:hover {
-  background: #000;
+  background: black;
 }
 
 /* ---------- RESPONSIVE ---------- */
