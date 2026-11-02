@@ -23,7 +23,7 @@ header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-start; /* put left */
+  justify-content: flex-start; /*  left */
   align-items: center;
   gap: 20px;
   width: 100%;
@@ -35,9 +35,6 @@ header {
   object-fit: contain;
   user-select: none;
   flex-shrink: 0; /*  stops the card squashing the logo */
-  position: fixed;
-  top: -1%;
-  left: -100%;
 }
 
 /* ---------- EVENT CARD ---------- */
