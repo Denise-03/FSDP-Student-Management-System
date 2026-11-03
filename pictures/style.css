@@ -136,6 +136,87 @@ header {
   font-weight: bolder;
 }
 
+/* ---------- CALENDAR ---------- */
+.calendar {
+  flex-shrink: 0;
+  width: 250px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  user-select: none;
+}
+
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cal-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #162938;
+}
+
+.cal-nav {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 16px;
+  color: #162938;
+  cursor: pointer;
+}
+
+.cal-nav:hover {
+  background: #eef1f6;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.cal-weekdays span {
+  font-size: 10px;
+  color: #999;
+  padding: 4px 0;
+}
+
+.cal-day {
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 11px;
+  color: #111;
+  cursor: pointer;
+}
+
+.cal-day:hover {
+  background: #eef1f6;
+}
+
+.cal-day.other-month {
+  color: #bbb;
+}
+
+.cal-day.today {
+  border-color: #162938;
+}
+
+.cal-day.selected {
+  background: #162938;
+  color: white;
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 700px) {
   .navigate {
