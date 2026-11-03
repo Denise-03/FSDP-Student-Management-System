@@ -6,23 +6,20 @@
 
 /* ---------- HEADER ---------- */
 header {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: 96vw;
-  padding: 15px 0;
+  position: relative;
+  width: 100%;
+  padding: 15px 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column; /* row 1 = logo/card/icons, row 2 = calendar */
+  align-items: flex-start;
+  gap: 12px;
   z-index: 10;
 }
 
 .navigate {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: flex-start; /*  left */
   align-items: center;
   gap: 20px;
@@ -40,6 +37,8 @@ header {
 /* ---------- EVENT CARD ---------- */
 .event-card {
   display: flex;
+  flex: 1 1 280px;
+  max-width: 560px;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -147,6 +146,10 @@ header {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   font-family: Arial, Helvetica, sans-serif;
   user-select: none;
+  text-align: end;
+  justify-content: end;
+  align-items: end;
+  align-self: flex-end;
 }
 
 .cal-head {
@@ -219,9 +222,27 @@ header {
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 700px) {
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
+  .event-card {
+    flex-basis: 100%; /* card takes its own full row on small screens */
+    max-width: none;
+  }
+}
+@media (min-width: 1200px) {
+  header {
+    flex-direction: row;
+    gap: 16px;
+    padding: 10px 20px;
+  }
   .navigate {
-    flex-direction: column;
-    border-radius: 24px;
-    gap: 12px;
+    flex: 0 1 auto; /* logo/card/icons take the remaining space */
+    width: auto;
+    min-width: 0; /* lets the row shrink instead of overflowing */
+  }
+  .calendar {
+    margin-left: 258px;
   }
 }
