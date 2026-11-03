@@ -1,55 +1,46 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Student Dashboard</title>
-  </head>
-  <body>
-    <header>
-      <div class="navigate">
-        <img
-          src="aikido_shinju_kai_logo.png"
-          alt="Aikido Shinjukai logo"
-          width="100"
-          height="100"
-          class="logo"
-        />
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
+<header>
+  <div class="navigate">
+    <img
+      src="aikido_shinju_kai_logo.png"
+      alt="Aikido Shinjukai logo"
+      width="100"
+      height="100"
+      class="logo"
+    />
 
-        <div class="event-card">
-          <div class="event-info">
-            <b><p class="event-label">UPCOMING COMMUNITY EVENT!</p></b>
-            <h3 class="event-title">Aikido Shinjukai Family Day</h3>
-            <div class="event-tags">
-              <span class="event-tag">✔ Parents welcome</span>
-              <span class="event-tag">✔ Complimentary dinner provided</span>
-              <span class="event-tag">Date: TBA</span>
-              <span class="event-tag">Time: TBA</span>
-            </div>
-          </div>
-          <button class="event-btn">Learn more</button>
+    <div class="event-card">
+      <div class="event-info">
+        <p class="event-label">UPCOMING COMMUNITY EVENT!</p>
+        <h3 class="event-title">Aikido Shinjukai Family Day</h3>
+        <div class="event-tags">
+          <span class="event-tag">✔ Parents welcome</span>
+          <span class="event-tag">✔ Complimentary dinner provided</span>
+          <span class="event-tag">Date: TBA</span>
+          <span class="event-tag">Time: TBA</span>
         </div>
       </div>
-      <div id="notifications">
-        <ion-icon name="notifications-outline"></ion-icon>
+      <button class="event-btn">Learn more</button>
+    </div>
+
+    <div id="notifications">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </div>
+    <div id="account-setting">
+      <ion-icon name="person-circle-outline"></ion-icon>
+    </div>
+    <div class="calendar" id="calendar">
+      <div class="cal-head">
+        <button class="cal-nav" id="cal-prev" aria-label="Previous month">
+          ‹
+        </button>
+        <span class="cal-title" id="cal-title"></span>
+        <button class="cal-nav" id="cal-next" aria-label="Next month">></button>
       </div>
-      <div>&nbsp;</div>
-      <div id="account-setting">
-        <ion-icon name="person-circle-outline"></ion-icon>
+      <div class="cal-grid cal-weekdays">
+        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+        <span>Th</span><span>Fr</span><span>Sa</span>
       </div>
-    </header>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"
-    ></script>
-  </body>
-</html>
+      <div class="cal-grid" id="cal-days"></div>
+    </div>
+  </div>
+</header>
