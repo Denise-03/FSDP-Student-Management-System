@@ -60,7 +60,48 @@
     </header>
 
     <!-- your page content goes here -->
-    <main></main>
+    <main>
+      <main class="body1">
+        <!-- Card 1: Class Enrollment -->
+        <section class="b1-card">
+          <h2 class="b1-title">Class Enrollment</h2>
+          <ion-icon class="b1-icon" name="people"></ion-icon>
+          <p class="b1-line">
+            <ion-icon name="location"></ion-icon>
+            Community Centre (venue TBA)
+          </p>
+          <span class="event-tag b1-tag b1-green">Open for enrollment</span>
+          <button class="event-btn b1-btn">View Enrollment</button>
+        </section>
+
+        <!-- Card 2: Attendance -->
+        <section class="b1-card">
+          <h2 class="b1-title">Attendance</h2>
+          <ion-icon class="b1-icon" name="calendar-outline"></ion-icon>
+          <p class="b1-line">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            2 lessons missed this month
+          </p>
+          <span class="event-tag b1-tag b1-yellow">Needs review</span>
+          <button class="event-btn b1-btn">View Attendance</button>
+        </section>
+
+        <!-- Card 3: Today's Classes and Events (sits under the calendar) -->
+        <section class="b1-card b1-today" id="today-card">
+          <h2 class="b1-title">Today's Classes and Events</h2>
+          <div class="b1-today-row">
+            <div class="b1-date">
+              <strong id="today-date"></strong>
+              <span id="today-time"></span>
+            </div>
+            <div class="b1-info">
+              <strong id="today-name"></strong>
+              <span id="today-venue"></span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </main>
 
     <script
       type="module"

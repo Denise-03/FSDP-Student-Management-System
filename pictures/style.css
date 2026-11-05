@@ -219,9 +219,94 @@ header {
   background: #162938;
   color: white;
 }
+/* ---------- BODY #1 ---------- */
+/* Same size for all 3 cards = the calendar width (250px) */
+.body1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+}
 
+.b1-card {
+  width: 250px;
+  padding: 16px;
+  background: #4a6b9c;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.b1-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.b1-icon {
+  font-size: 28px;
+}
+
+.b1-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+/* reuses your .event-tag and .event-btn, only the colours are new */
+.b1-green {
+  background: #3dbb5a;
+  color: white;
+}
+
+.b1-yellow {
+  background: #f2c230;
+  color: #162938;
+}
+
+.b1-btn {
+  width: 100%;
+}
+
+/* Card 3: left-aligned and pushed to the right, to sit under the calendar */
+.b1-today {
+  align-items: stretch;
+  text-align: left;
+  margin-left: auto; /* change this number to line it up under the calendar */
+}
+
+.b1-today-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: #162938;
+  border-radius: 12px;
+}
+
+.b1-date,
+.b1-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+}
+
+.b1-date strong {
+  font-size: 13px;
+}
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 700px) {
+  .b1-today {
+    margin-left: 0;
+  }
   .logo {
     width: 70px;
     height: 70px;

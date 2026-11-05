@@ -122,3 +122,52 @@ setInterval(() => {
 
 // show the calendar when the page first loads
 showCalendar();
+
+//Kenneth S10275014 - body #1
+// Card 3 shows the classes for the date picked on the calendar.
+// It only READS from script.js (months, today, selectedDay...), nothing there is changed.
+
+(function () {
+  // placeholder timetable, key = weekday (0 = Sunday ... 6 = Saturday)
+  // swap in your real class timings later
+  let timetable = {
+    2: { time: "7:30 pm", name: "Adults Aikido Class" },
+    4: { time: "7:30 pm", name: "Adults Aikido Class" },
+    6: { time: "3:00 pm", name: "Kids Aikido Class" },
+  };
+
+  let dateEl = document.getElementById("today-date");
+  let timeEl = document.getElementById("today-time");
+  let nameEl = document.getElementById("today-name");
+  let venueEl = document.getElementById("today-venue");
+
+  function showToday() {
+    // use the clicked date, or today if nothing is clicked yet
+    let date = today;
+    if (selectedDay !== null) {
+      date = new Date(selectedYear, selectedMonth, selectedDay);
+    }
+
+    dateEl.textContent =
+      date.getDate() + " " + months[date.getMonth()].slice(0, 3).toUpperCase();
+
+    let lesson = timetable[date.getDay()];
+    if (lesson) {
+      timeEl.textContent = lesson.time;
+      nameEl.textContent = lesson.name;
+      venueEl.textContent = "Venue TBA";
+    } else {
+      timeEl.textContent = "";
+      nameEl.textContent = "No classes or events";
+      venueEl.textContent = "";
+    }
+  }
+
+  // when a calendar day is clicked, the calendar redraws itself first, then this runs
+  document.getElementById("cal-days").addEventListener("click", showToday);
+
+  // also check once a minute so it follows the date change at midnight
+  setInterval(showToday, 60000);
+
+  showToday();
+})();
