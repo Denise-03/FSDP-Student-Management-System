@@ -331,3 +331,9 @@ header {
     margin-left: 258px;
   }
 }
+
+@media (min-width: 1350px) {
+  .b1-today {
+    margin-left: 525px;
+  }
+}
