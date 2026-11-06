@@ -483,6 +483,10 @@ header {
     gap: 16px;
     padding: 10px 20px;
   }
+  .body1,
+  .body2 {
+    padding-left: 10%; /* bigger number = cards move more to the right */
+  }
   .navigate {
     flex: 0 1 auto; /* logo/card/icons take the remaining space */
     width: auto;
@@ -493,33 +497,34 @@ header {
   }
   .b2-upcoming {
     margin-top: -5%;
+    margin-right: 0%;
   }
   .ft-wrap {
     margin-right: 20px;
-  }
-}
-
-@media (min-width: 1350px) {
-  .b1-today {
-    margin-left: 525px;
-  }
-
-  .b2-upcoming {
-    margin-left: 525px;
-    margin-top: -4.58%;
-  }
-  .ft-wrap {
-    margin-right: 180px;
-    margin-top: -3.88%;
-  }
-}
-@media screen and (min-width: 1200px) and (max-width: 1400px) {
-  .ft-wrap {
     margin-top: -5%;
   }
 }
-@media screen and (min-width: 1500px) and (max-width: 1600px) {
+
+@media (min-width: 1360px) {
+  .body1,
+  .body2 {
+    padding-left: 150px; /* fixed, so the position doesn't change with window width */
+  }
+
+  /* 150 + 250 + 16 + 250 + 16 + 406 = 1088px, the calendar's left edge */
+  .b1-today {
+    margin-left: 406px;
+    margin-top: 0;
+  }
+
+  .b2-upcoming {
+    margin-left: 406px;
+    margin-top: -71px; /* pulls it up to sit 16px under Today's box */
+  }
+
   .ft-wrap {
-    margin-top: -3.88%;
+    margin-left: 1088px; /* same left edge as the calendar */
+    margin-right: 0;
+    margin-top: -77px;
   }
 }
