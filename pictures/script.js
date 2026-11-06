@@ -147,7 +147,7 @@ showCalendar();
     if (selectedDay !== null) {
       date = new Date(selectedYear, selectedMonth, selectedDay);
     }
-
+    //modify the date + calender if necessary
     dateEl.textContent =
       date.getDate() + " " + months[date.getMonth()].slice(0, 3).toUpperCase();
 
@@ -155,7 +155,7 @@ showCalendar();
     if (lesson) {
       timeEl.textContent = lesson.time;
       nameEl.textContent = lesson.name;
-      venueEl.textContent = "Venue TBA";
+      venueEl.textContent = "Bukit Merah Community Centre";
     } else {
       timeEl.textContent = "";
       nameEl.textContent = "No classes or events";
