@@ -302,9 +302,104 @@ header {
 .b1-date strong {
   font-size: 13px;
 }
+/* ---------- BODY #2 ---------- */
+.body2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 20px 20px;
+}
+
+.b2-card {
+  width: 250px;
+  padding: 16px;
+  background: #4a6b9c;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.b2-highlight {
+  border: 2px solid #2f8cff; /* the blue outline on Training Progress */
+}
+
+.b2-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.b2-icon {
+  font-size: 28px;
+}
+
+.b2-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.b2-green {
+  background: #3dbb5a;
+  color: white;
+}
+
+.b2-yellow {
+  background: #f2c230;
+  color: #162938;
+}
+
+.b2-btn {
+  width: 100%;
+}
+
+/* Card 3: pushed to the right, same spot as body #1's card 3 (calendar side) */
+.b2-upcoming {
+  align-items: stretch;
+  text-align: left;
+  margin-left: auto; /* keep the same number as .b1-today so they line up */
+}
+
+#upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.b2-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: #162938;
+  border-radius: 12px;
+}
+
+.b2-date,
+.b2-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+}
+
+.b2-date strong {
+  font-size: 13px;
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 700px) {
   .b1-today {
+    margin-left: 0;
+  }
+  .b2-upcoming {
     margin-left: 0;
   }
   .logo {

@@ -103,6 +103,37 @@
           </div>
         </section>
       </main>
+      <section class="body2">
+        <!-- Card 1: Payment -->
+        <div class="b2-card">
+          <h2 class="b2-title">Payment</h2>
+          <ion-icon class="b2-icon" name="card-outline"></ion-icon>
+          <p class="b2-line">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Next payment due: 1 Dec
+          </p>
+          <span class="event-tag b2-green">status: PAID</span>
+          <button class="event-btn b2-btn">View Payment</button>
+        </div>
+
+        <!-- Card 2: Training Progress (blue outline) -->
+        <div class="b2-card b2-highlight">
+          <h2 class="b2-title">Training Progress</h2>
+          <ion-icon class="b2-icon" name="trending-up-outline"></ion-icon>
+          <p class="b2-line">
+            <ion-icon name="ribbon-outline"></ion-icon>
+            Current grade: 5th Kyu
+          </p>
+          <span class="event-tag b2-yellow">In progress</span>
+          <button class="event-btn b2-btn">View Progress</button>
+        </div>
+
+        <!-- Card 3: Upcoming dates (under the calendar side) -->
+        <div class="b2-card b2-upcoming">
+          <h2 class="b2-title">Upcoming Classes and Events</h2>
+          <div id="upcoming-list"></div>
+        </div>
+      </section>
     </main>
 
     <script

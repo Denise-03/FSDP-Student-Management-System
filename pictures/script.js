@@ -171,3 +171,83 @@ showCalendar();
 
   showToday();
 })();
+// ---------- body #2: card 3 (upcoming classes and events) ----------
+(function () {
+  // placeholder events, month: 0 = January ... 11 = December
+  let upcoming = [
+    {
+      month: 10,
+      day: 18,
+      time: "2 pm",
+      name: "Aikido Class",
+      venue: "Bukit Merah Community Centre",
+    },
+    {
+      month: 11,
+      day: 2,
+      time: "1 pm",
+      name: "Grading Test",
+      venue: "Bukit Merah Community Centre",
+    },
+    {
+      month: 11,
+      day: 16,
+      time: "2 pm",
+      name: "Aikido Class",
+      venue: "Bukit Merah Community Centre",
+    },
+  ];
+
+  let listEl = document.getElementById("upcoming-list");
+
+  function addRow(ev) {
+    let row = document.createElement("div");
+    row.className = "b2-row";
+
+    let dateBox = document.createElement("div");
+    dateBox.className = "b2-date";
+    let dateText = document.createElement("strong");
+    dateText.textContent =
+      ev.day + " " + months[ev.month].slice(0, 3).toUpperCase();
+    let timeText = document.createElement("span");
+    timeText.textContent = ev.time;
+    dateBox.appendChild(dateText);
+    dateBox.appendChild(timeText);
+
+    let infoBox = document.createElement("div");
+    infoBox.className = "b2-info";
+    let nameText = document.createElement("strong");
+    nameText.textContent = ev.name;
+    let venueText = document.createElement("span");
+    venueText.textContent = ev.venue;
+    infoBox.appendChild(nameText);
+    infoBox.appendChild(venueText);
+
+    row.appendChild(dateBox);
+    row.appendChild(infoBox);
+    listEl.appendChild(row);
+  }
+
+  function showUpcoming() {
+    listEl.innerHTML = "";
+
+    let now = new Date();
+    now.setHours(0, 0, 0, 0); // start of today
+    let shown = 0;
+
+    upcoming.forEach((ev) => {
+      let evDate = new Date(now.getFullYear(), ev.month, ev.day);
+      if (evDate >= now && shown < 2) {
+        addRow(ev);
+        shown++;
+      }
+    });
+
+    if (shown === 0) {
+      listEl.textContent = "No upcoming events";
+    }
+  }
+
+  showUpcoming();
+  setInterval(showUpcoming, 60000); // re-check every minute, so past events drop off
+})();
