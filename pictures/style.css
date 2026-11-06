@@ -410,6 +410,9 @@ header {
     flex-basis: 100%; /* card takes its own full row on small screens */
     max-width: none;
   }
+  .b2-upcoming {
+    margin-top: -5%;
+  }
 }
 @media (min-width: 1200px) {
   header {
@@ -425,6 +428,9 @@ header {
   .calendar {
     margin-left: 258px;
   }
+  .b2-upcoming {
+    margin-top: -5%;
+  }
 }
 
 @media (min-width: 1350px) {
@@ -434,6 +440,6 @@ header {
 
   .b2-upcoming {
     margin-left: 525px;
-    margin-top: 1%;
+    margin-top: -4%;
   }
 }
