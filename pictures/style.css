@@ -476,6 +476,7 @@ header {
     margin-top: -5%;
   }
 }
+
 @media (min-width: 1200px) {
   header {
     flex-direction: row;
@@ -509,6 +510,16 @@ header {
   }
   .ft-wrap {
     margin-right: 180px;
+    margin-top: -3.88%;
+  }
+}
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  .ft-wrap {
+    margin-top: -5%;
+  }
+}
+@media screen and (min-width: 1500px) and (max-width: 1600px) {
+  .ft-wrap {
     margin-top: -3.88%;
   }
 }
