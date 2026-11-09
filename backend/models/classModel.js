@@ -1,16 +1,19 @@
 
 const { sql, connectDB } = require("../config/db");
 
-async function getAllClasses() {
+async function getAllClasses(studentId = null) {
     const pool = await connectDB();
+    const request = pool.request().input("StudentId", sql.Int, studentId);
 
-    const result = await pool.request().query(`
+    const result = await request.query(`
         SELECT
             cs.ClassSessionId,
             cs.SessionCode,
             cs.Title,
             cs.StartsAtLocal,
             cs.EndsAtLocal,
+            CONVERT(VARCHAR(16), cs.StartsAtLocal, 120) AS StartsAtLocalText,
+            CONVERT(VARCHAR(16), cs.EndsAtLocal, 120) AS EndsAtLocalText,
             cs.Capacity,
             cs.Status,
             cs.CountsForGrading,
@@ -19,6 +22,14 @@ async function getAllClasses() {
             d.Name AS DojoName,
             d.Address AS DojoAddress,
             d.PostalCode,
+
+            CAST(CASE WHEN EXISTS (
+                SELECT 1
+                FROM dbo.ClassEnrolments ownEnrolment
+                WHERE ownEnrolment.ClassSessionId = cs.ClassSessionId
+                  AND ownEnrolment.StudentId = @StudentId
+                  AND ownEnrolment.Status = 'Enrolled'
+            ) THEN 1 ELSE 0 END AS BIT) AS IsEnrolled,
 
             (
                 SELECT COUNT(*)
@@ -34,9 +45,44 @@ async function getAllClasses() {
 
         WHERE cs.Status = 'Scheduled'
         AND d.IsActive = 1
+        AND cs.StartsAtLocal > GETDATE()
 
         ORDER BY cs.StartsAtLocal ASC;
     `);
+
+    return result.recordset;
+}
+
+
+async function getStudentSchedule(studentId) {
+    const pool = await connectDB();
+
+    const result = await pool.request()
+        .input("StudentId", sql.Int, studentId)
+        .query(`
+            SELECT
+                ce.ClassEnrolmentId,
+                ce.StudentId,
+                cs.ClassSessionId,
+                cs.SessionCode,
+                cs.Title,
+                cs.StartsAtLocal,
+                cs.EndsAtLocal,
+                CONVERT(VARCHAR(16), cs.StartsAtLocal, 120) AS StartsAtLocalText,
+                CONVERT(VARCHAR(16), cs.EndsAtLocal, 120) AS EndsAtLocalText,
+                cs.Status AS ClassStatus,
+                d.DojoId,
+                d.Name AS DojoName,
+                d.Address AS DojoAddress
+            FROM dbo.ClassEnrolments ce
+            INNER JOIN dbo.ClassSessions cs
+                ON ce.ClassSessionId = cs.ClassSessionId
+            INNER JOIN dbo.Dojos d
+                ON cs.DojoId = d.DojoId
+            WHERE ce.StudentId = @StudentId
+              AND ce.Status = 'Enrolled'
+            ORDER BY cs.StartsAtLocal ASC;
+        `);
 
     return result.recordset;
 }
@@ -174,5 +220,6 @@ async function enrolStudent(studentId, classSessionId) {
 
 module.exports = {
     getAllClasses,
+    getStudentSchedule,
     enrolStudent
 };

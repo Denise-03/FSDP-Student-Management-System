@@ -1,16 +1,44 @@
-
 const classModel = require("../models/classModel");
 
 async function getAllClasses(req, res) {
     try {
-        const classes = await classModel.getAllClasses();
+        let studentId = null;
 
+        if (req.query.studentId !== undefined) {
+            studentId = Number(req.query.studentId);
+            if (!Number.isInteger(studentId) || studentId <= 0) {
+                return res.status(400).json({
+                    message: "A valid studentId is required."
+                });
+            }
+        }
+
+        const classes = await classModel.getAllClasses(studentId);
         res.status(200).json(classes);
     } catch (error) {
         console.error("Error retrieving classes:", error);
-
         res.status(500).json({
             message: "Failed to retrieve classes."
+        });
+    }
+}
+
+async function getStudentSchedule(req, res) {
+    try {
+        const studentId = Number(req.params.studentId);
+
+        if (!Number.isInteger(studentId) || studentId <= 0) {
+            return res.status(400).json({
+                message: "A valid studentId is required."
+            });
+        }
+
+        const schedule = await classModel.getStudentSchedule(studentId);
+        res.status(200).json(schedule);
+    } catch (error) {
+        console.error("Error retrieving student schedule:", error);
+        res.status(500).json({
+            message: "Failed to retrieve student schedule."
         });
     }
 }
@@ -30,16 +58,10 @@ async function enrolStudent(req, res) {
             });
         }
 
-        const result = await classModel.enrolStudent(
-            studentId,
-            classSessionId
-        );
-
+        const result = await classModel.enrolStudent(studentId, classSessionId);
         res.status(201).json(result);
-
     } catch (error) {
         console.error("Enrolment error:", error);
-
         res.status(error.statusCode || 500).json({
             message: error.message || "Failed to enrol in class."
         });
@@ -48,5 +70,6 @@ async function enrolStudent(req, res) {
 
 module.exports = {
     getAllClasses,
+    getStudentSchedule,
     enrolStudent
 };
