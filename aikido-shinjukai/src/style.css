@@ -1,0 +1,530 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- HEADER ---------- */
+header {
+  position: relative;
+  width: 100%;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column; /* row 1 = logo/card/icons, row 2 = calendar */
+  align-items: flex-start;
+  gap: 12px;
+  z-index: 10;
+}
+
+.navigate {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start; /*  left */
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 0;
+}
+
+.logo {
+  display: block;
+  object-fit: contain;
+  user-select: none;
+  flex-shrink: 0; /*  stops the card squashing the logo */
+}
+
+/* ---------- EVENT CARD ---------- */
+.event-card {
+  display: flex;
+  flex: 1 1 280px;
+  max-width: 560px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  background: #a6b6ce;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.event-label {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #162938;
+}
+
+.event-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111;
+}
+
+.event-tags {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.event-tag {
+  font-size: 9px;
+  font-weight: bold;
+  color: #2f3e34;
+  background: white;
+  border-radius: 999px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.event-btn {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+  background: #162938;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.event-btn:hover {
+  background: black;
+}
+
+/* ----------- ion-icon -------- */
+#notifications {
+  border-radius: 50%;
+  background-color: white;
+  padding: 20px;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+#account-setting {
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#notifications:hover {
+  color: #4a6b9c;
+  font-weight: bolder;
+}
+
+#account-setting:hover {
+  color: #4a6b9c;
+  font-weight: bolder;
+}
+
+/* ---------- CALENDAR ---------- */
+.calendar {
+  flex-shrink: 0;
+  width: 250px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  user-select: none;
+  text-align: end;
+  justify-content: end;
+  align-items: end;
+  align-self: flex-end;
+}
+
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cal-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #162938;
+}
+
+.cal-nav {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 16px;
+  color: #162938;
+  cursor: pointer;
+}
+
+.cal-nav:hover {
+  background: #eef1f6;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.cal-weekdays span {
+  font-size: 10px;
+  color: #999;
+  padding: 4px 0;
+}
+
+.cal-day {
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 11px;
+  color: #111;
+  cursor: pointer;
+}
+
+.cal-day:hover {
+  background: #eef1f6;
+}
+
+.cal-day.other-month {
+  color: #bbb;
+}
+
+.cal-day.today {
+  border-color: #162938;
+}
+
+.cal-day.selected {
+  background: #162938;
+  color: white;
+}
+/* ---------- BODY #1 ---------- */
+/* Same size for all 3 cards = the calendar width (250px) */
+.body1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+}
+
+.b1-card {
+  width: 250px;
+  padding: 16px;
+  background: #4a6b9c;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.b1-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.b1-icon {
+  font-size: 28px;
+}
+
+.b1-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+/* reuses your .event-tag and .event-btn, only the colours are new */
+.b1-green {
+  background: #3dbb5a;
+  color: white;
+}
+
+.b1-yellow {
+  background: #f2c230;
+  color: #162938;
+}
+
+.b1-btn {
+  width: 100%;
+}
+
+/* Card 3: left-aligned and pushed to the right, to sit under the calendar */
+.b1-today {
+  align-items: stretch;
+  text-align: left;
+  margin-left: auto; /* change this number to line it up under the calendar */
+}
+
+.b1-today-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: #162938;
+  border-radius: 12px;
+}
+
+.b1-date,
+.b1-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+}
+
+.b1-date strong {
+  font-size: 13px;
+}
+/* ---------- BODY #2 ---------- */
+.body2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 20px 20px;
+}
+
+.b2-card {
+  width: 250px;
+  padding: 16px;
+  background: #4a6b9c;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.b2-highlight {
+  border: 2px solid #2f8cff; /* the blue outline on Training Progress */
+}
+
+.b2-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.b2-icon {
+  font-size: 28px;
+}
+
+.b2-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.b2-green {
+  background: #3dbb5a;
+  color: white;
+}
+
+.b2-yellow {
+  background: #f2c230;
+  color: #162938;
+}
+
+.b2-btn {
+  width: 100%;
+}
+
+/* Card 3: pushed to the right, same spot as body #1's card 3 (calendar side) */
+.b2-upcoming {
+  align-items: stretch;
+  text-align: left;
+  margin-left: auto; /* keep the same number as .b1-today so they line up */
+}
+
+#upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.b2-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: #162938;
+  border-radius: 12px;
+}
+
+.b2-date,
+.b2-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+}
+
+.b2-date strong {
+  font-size: 13px;
+}
+/* ---------- FOOTER (tail) ---------- */
+.ft-wrap {
+  width: 250px; /* same width as the cards, so the left edge lines up */
+  margin-left: auto; /* same trick as the card 3s, so it sits under the calendar side */
+  margin-right: 20px; /* matches the 20px padding of body 1 and body 2 */
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.ft-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #162938;
+}
+
+.ft-box {
+  width: fit-content; /* only as wide as the words */
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #4a6b9c;
+  border: 1px solid white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  color: white;
+  font-size: 10px;
+}
+
+.ft-icon {
+  font-size: 18px;
+}
+
+.ft-support {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.ft-support strong {
+  font-size: 12px;
+}
+
+.ft-link {
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ft-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .ft-wrap {
+    margin-left: 20px;
+  }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 700px) {
+  .b1-today {
+    margin-left: 0;
+  }
+  .b2-upcoming {
+    margin-left: 0;
+  }
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
+  .event-card {
+    flex-basis: 100%; /* card takes its own full row on small screens */
+    max-width: none;
+  }
+  .b2-upcoming {
+    margin-top: -5%;
+  }
+}
+
+@media (min-width: 1200px) {
+  header {
+    flex-direction: row;
+    gap: 16px;
+    padding: 10px 20px;
+  }
+  .body1,
+  .body2 {
+    padding-left: 10%; /* bigger number = cards move more to the right */
+  }
+  .navigate {
+    flex: 0 1 auto; /* logo/card/icons take the remaining space */
+    width: auto;
+    min-width: 0; /* lets the row shrink instead of overflowing */
+  }
+  .calendar {
+    margin-left: 258px;
+  }
+  .b2-upcoming {
+    margin-top: -5%;
+    margin-right: 0%;
+  }
+  .ft-wrap {
+    margin-right: 20px;
+    margin-top: -5%;
+  }
+}
+
+@media (min-width: 1360px) {
+  .body1,
+  .body2 {
+    padding-left: 150px; /* fixed, so the position doesn't change with window width */
+  }
+
+  /* 150 + 250 + 16 + 250 + 16 + 406 = 1088px, the calendar's left edge */
+  .b1-today {
+    margin-left: 406px;
+    margin-top: 0;
+  }
+
+  .b2-upcoming {
+    margin-left: 406px;
+    margin-top: -71px; /* pulls it up to sit 16px under Today's box */
+  }
+
+  .ft-wrap {
+    margin-left: 1088px; /* same left edge as the calendar */
+    margin-right: 0;
+    margin-top: -77px;
+  }
+}

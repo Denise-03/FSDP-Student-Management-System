@@ -1,0 +1,65 @@
+@import url("./findClasses.css");
+
+.schedule-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 19px;
+    margin-bottom: 18px;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    background: #f7f9fc;
+    color: #68778a;
+    font-size: 13px;
+}
+.schedule-summary strong { color: #263e5b; font-size: 25px; }
+.schedule-session-list { display: grid; gap: 14px; }
+.schedule-session-card {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    padding: 19px;
+    border: 1px solid #e1e7ef;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 5px 18px rgba(22, 41, 56, .05);
+}
+.schedule-date-block {
+    display: flex;
+    flex: 0 0 76px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 10px;
+    background: #edf2f8;
+    color: #4a6b9c;
+    text-align: center;
+}
+.schedule-date-block span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.schedule-date-block strong { color: #162938; font-size: 27px; }
+.schedule-session-info { flex: 1; min-width: 0; }
+.schedule-session-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.schedule-session-heading h2 { margin-bottom: 5px; color: #162938; font-size: 18px; }
+.schedule-session-heading p, .schedule-session-address { color: #718096; font-size: 12px; }
+.schedule-status { flex-shrink: 0; padding: 5px 9px; border-radius: 999px; font-size: 10px; font-weight: 700; text-transform: capitalize; }
+.schedule-status.scheduled { color: #276443; background: #e7f5ec; }
+.schedule-status.completed { color: #5b6470; background: #edf0f3; }
+.schedule-session-time { margin: 13px 0 6px; color: #35465a; font-size: 13px; font-weight: 600; }
+.schedule-primary-link { display: inline-block; margin-top: 16px; padding: 11px 16px; border-radius: 8px; background: #263e5b; color: white; text-decoration: none; font-size: 13px; font-weight: 700; }
+
+@media (max-width: 560px) {
+    .schedule-session-card { gap: 12px; padding: 13px; }
+    .schedule-date-block { flex-basis: 58px; }
+    .schedule-session-heading { flex-direction: column; }
+}
+
+.schedule-navigation {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.schedule-navigation a {
+    text-decoration: none;
+}

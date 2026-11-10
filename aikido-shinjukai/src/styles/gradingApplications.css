@@ -1,0 +1,339 @@
+
+/* ---------- GRADING APPLICATIONS PAGE ---------- */
+
+.grading-applications-page {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    padding: 25px 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #162938;
+    background: #ffffff;
+}
+
+.grading-applications-page * {
+    box-sizing: border-box;
+}
+
+.grading-applications-page .feature-page-heading {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ---------- NAVIGATION ---------- */
+
+.grading-navigation {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.grading-navigation a {
+    color: #162938;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.grading-navigation a:hover {
+    color: #4a6b9c;
+}
+
+/* ---------- PAGE HEADING ---------- */
+
+.grading-applications-page .feature-page-heading {
+    margin-bottom: 25px;
+}
+
+.grading-applications-page .feature-eyebrow {
+    color: #4a6b9c;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.grading-applications-page .feature-page-heading h1 {
+    color: #162938;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.grading-applications-page .feature-description {
+    color: #555f6b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ---------- STATUS SUMMARY ---------- */
+
+.grading-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+
+.grading-summary-card {
+    background: #4a6b9c;
+    border: 1px solid white;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+}
+
+.grading-summary-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+.grading-summary-card strong {
+    font-size: 28px;
+    color: white;
+}
+
+/* ---------- SUMMARY CARD ACCENTS ---------- */
+
+.pending-summary {
+    background: #a6b6ce;
+}
+
+.pending-summary .grading-summary-label,
+.pending-summary strong {
+    color: #162938;
+}
+
+.approved-summary {
+    background: #3dbb5a;
+}
+
+.approved-summary .grading-summary-label,
+.approved-summary strong {
+    color: white;
+}
+
+.rejected-summary {
+    background: #162938;
+}
+
+/* ---------- APPLICATION FILTERS ---------- */
+
+.grading-filter-section {
+    margin: 32px 0 18px;
+}
+
+.grading-filter-section h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #162938;
+}
+
+.grading-filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.grading-filter-button {
+    border: 1px solid #a6b6ce;
+    background: white;
+    color: #162938;
+    padding: 9px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.grading-filter-button:hover {
+    background: #eef1f6;
+}
+
+.grading-filter-button.active {
+    background: #162938;
+    color: white;
+    border-color: #162938;
+}
+
+/* ---------- APPLICATION CARDS ---------- */
+
+.grading-application-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.grading-application-card {
+    background: #4a6b9c;
+    border: 1px solid white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    color: white;
+}
+
+.grading-application-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.grading-application-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #e1e8f1;
+    margin-bottom: 7px;
+}
+
+.grading-application-heading h2 {
+    font-size: 21px;
+    margin: 0;
+    color: white;
+}
+
+/* ---------- STATUS BADGES ---------- */
+
+.grading-status-badge {
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    background: white;
+}
+
+.grading-status-badge.pending {
+    background: #f2c230;
+    color: #162938;
+}
+
+.grading-status-badge.approved {
+    background: #3dbb5a;
+    color: white;
+}
+
+.grading-status-badge.rejected {
+    background: #ffffff;
+    color: #162938;
+}
+
+/* ---------- APPLICATION DETAILS ---------- */
+
+.grading-application-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 18px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.grading-application-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.grading-application-details span {
+    font-size: 12px;
+    color: #e1e8f1;
+}
+
+.grading-application-details strong {
+    font-size: 13px;
+    color: white;
+}
+
+/* ---------- STATUS MESSAGES ---------- */
+
+.grading-status-message {
+    margin-top: 18px;
+    padding: 15px 18px;
+    border-radius: 12px;
+    background: #162938;
+    color: white;
+}
+
+.grading-status-message strong {
+    font-size: 13px;
+}
+
+.grading-status-message p {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.pending-message {
+    background: #a6b6ce;
+    color: #162938;
+}
+
+.approved-message {
+    background: #3dbb5a;
+    color: white;
+}
+
+.rejected-message {
+    background: #162938;
+    color: white;
+}
+
+/* ---------- EMPTY STATE ---------- */
+
+.grading-applications-page .feature-empty-state {
+    background: #a6b6ce;
+    border-radius: 16px;
+    padding: 30px;
+    color: #162938;
+}
+
+.grading-applications-page .feature-empty-state h2 {
+    margin-bottom: 10px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 768px) {
+    .grading-applications-page {
+        padding: 20px;
+    }
+
+    .grading-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grading-application-details {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grading-summary {
+        gap: 10px;
+    }
+
+    .grading-summary-card {
+        padding: 14px;
+    }
+
+    .grading-application-card {
+        padding: 18px;
+    }
+
+    .grading-application-heading {
+        flex-direction: column;
+    }
+}

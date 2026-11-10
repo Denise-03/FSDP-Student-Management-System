@@ -1,0 +1,406 @@
+
+* {
+    box-sizing: border-box;
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f6fa;
+    font-family: Arial, sans-serif;
+    color: #263449;
+}
+
+.sidebar {
+    width: 240px;
+    background: #17365d;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 22px;
+    line-height: 1.4;
+    letter-spacing: 2px;
+    margin-bottom: 55px;
+}
+
+.nav-heading {
+    color: #9fb3cc;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.nav-link {
+    display: block;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    color: #dce7f4;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #315982;
+    color: white;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    color: #c5d3e4;
+    font-size: 13px;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    height: 90px;
+    padding: 20px 35px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e9f0;
+}
+
+.topbar h2 {
+    margin: 0 0 6px;
+    font-size: 21px;
+}
+
+.topbar p {
+    margin: 0;
+    color: #8995a6;
+    font-size: 13px;
+}
+
+.admin-profile {
+    background: #eaf0f8;
+    color: #17365d;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.content {
+    padding: 35px;
+}
+
+.section-heading {
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    margin: 0 0 8px;
+    font-size: 23px;
+}
+
+.section-heading p {
+    color: #8995a6;
+    font-size: 14px;
+}
+
+.membership-layout {
+    display: grid;
+    grid-template-columns: 350px minmax(0, 1fr);
+    gap: 25px;
+    align-items: start;
+}
+
+.student-panel,
+.details-panel {
+    background: white;
+    border: 1px solid #e7ebf1;
+    border-radius: 10px;
+    padding: 22px;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.panel-heading h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.panel-heading span {
+    color: #8995a6;
+    font-size: 12px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dce2ea;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    outline: none;
+}
+
+.search-input:focus,
+.edit-form input:focus,
+.edit-form select:focus {
+    border-color: #315982;
+}
+
+.student-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.student-item:hover,
+.student-item.selected {
+    background: #edf3fa;
+}
+
+.student-avatar,
+.large-avatar {
+    width: 42px;
+    height: 42px;
+    background: #dce8f5;
+    color: #17365d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.student-info strong {
+    font-size: 13px;
+}
+
+.student-info span {
+    font-size: 11px;
+    color: #8995a6;
+}
+
+.status {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status.active {
+    background: #e0f4e9;
+    color: #23834b;
+}
+
+.status.suspended {
+    background: #fff1d9;
+    color: #a66a0a;
+}
+
+.status.cancelled,
+.status.no-membership {
+    background: #fce5e5;
+    color: #b54747;
+}
+
+.student-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0 25px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.large-avatar {
+    width: 58px;
+    height: 58px;
+    font-size: 20px;
+}
+
+.student-profile h2 {
+    font-size: 19px;
+    margin: 0 0 7px;
+}
+
+.student-profile p {
+    font-size: 13px;
+    color: #8995a6;
+    margin: 0;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 22px 0;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.detail-grid div,
+.membership-dates div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-grid span,
+.membership-dates span {
+    font-size: 11px;
+    color: #8995a6;
+}
+
+.detail-grid strong,
+.membership-dates strong {
+    font-size: 13px;
+}
+
+.history-heading {
+    margin: 25px 0 15px;
+}
+
+.history-heading h3 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.membership-card {
+    border: 1px solid #e7ebf1;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.membership-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.membership-card-heading strong {
+    font-size: 13px;
+}
+
+.membership-dates {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 20px;
+}
+
+.edit-button,
+.form-actions button {
+    background: #17365d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-button:hover,
+.form-actions button:hover {
+    background: #315982;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-form label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.edit-form input,
+.edit-form select {
+    padding: 10px;
+    border: 1px solid #dce2ea;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.form-actions .cancel-button {
+    background: #e8ecf2;
+    color: #263449;
+}
+
+.empty-message {
+    color: #8995a6;
+    font-size: 13px;
+    padding: 15px 0;
+}
+
+@media (max-width: 900px) {
+    .membership-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        display: none;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .topbar {
+        padding: 18px;
+    }
+}
+
+.error-message {
+    background: #fce5e5;
+    color: #b54747;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.loading-message {
+    padding: 30px;
+    text-align: center;
+    color: #8995a6;
+}
