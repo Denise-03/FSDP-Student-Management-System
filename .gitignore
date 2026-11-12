@@ -1,5 +1,6 @@
 # Dependencies
 /frontend/node_modules/
+node_modules
 
 # Generated build files
 /frontend/dist/
@@ -8,3 +9,6 @@
 /frontend/database/
 /frontend/docs/
 /frontend/design-reference/
+
+# Generated .env file from setup step 4
+backend/.env
