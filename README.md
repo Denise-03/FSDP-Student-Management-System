@@ -1,7 +1,5 @@
 # FSDP Aikido Student Management System — Windows Setup Guide
 
-**For:** Team members setting up their own local copy of the supplied `FSDP_Student_Management_System_Encoding_Fixed.zip` on Windows with SQL Server / SSMS.
-
 **Project:** `FSDP-Student-Management-System` (React/Vite frontend, Express backend, Microsoft SQL Server database).
 
 > **Important:** Run setup on your **own development SQL Server/database**. Do not run seed or reset against a team's shared database with useful data. Do not send anyone your `backend/.env`, SQL passwords, Stripe keys or real documents.
@@ -146,7 +144,7 @@ npm run db:seed
 npm run db:verify
 ```
 
-The seed populates demo users, centres, classes, bookings, attendance and grading rules. The verifier expects at least 12 users, 3 active centres, 12 upcoming sessions, 7 grading rules and 10 attendance records.
+The seed populates demo users, centres, classes, bookings, attendance and grading rules.
 
 Successful verification prints something like `SQL Server verification passed:` with counts. The exact future-class count can vary based on when the fixtures were first seeded.
 
@@ -209,8 +207,6 @@ npm test
 npm run e2e
 ```
 
-The browser test suite uses Microsoft Edge by default on Windows; see the README if you use Chrome/Chromium. It can create **fictional test applicant records** and is intended for development data, not production.
-
 ## Common errors and fixes
 
 | Symptom | What to check / do |
@@ -247,5 +243,3 @@ The browser test suite uses Microsoft Edge by default on Windows; see the README
 - [ ] `http://127.0.0.1:4000/api/health` returns OK.
 - [ ] Student, instructor and admin can log in on `http://127.0.0.1:5173`.
 - [ ] `npm run build`, `npm test`, and `npm run e2e` have been run and results recorded.
-
-**Source basis:** The supplied ZIP's `README.md`, `backend/.env.example`, backend SQL connection code, root `package.json`, migration/seed/verify/reset scripts, `docs/MIGRATIONS_AND_SEEDING.md`, and `docs/DB_SCHEMA.md`.
