@@ -1,0 +1,10 @@
+# Dependencies
+/frontend/node_modules/
+
+# Generated build files
+/frontend/dist/
+
+# Duplicate directories
+/frontend/database/
+/frontend/docs/
+/frontend/design-reference/
