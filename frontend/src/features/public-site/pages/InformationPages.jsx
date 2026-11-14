@@ -80,10 +80,6 @@ export function GradingInfoPage() {
                   months and {rule.minSessions} sessions.
                 </p>
               ))}
-              <p>
-                These reduced thresholds are synthetic. Confirm official requirements with
-                your instructor.
-              </p>
             </Card>
           </>
         )}
