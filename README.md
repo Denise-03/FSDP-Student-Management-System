@@ -169,15 +169,21 @@ Stop the local servers by focusing the PowerShell terminal and pressing **Ctrl+C
 
 All accounts below use the **local-only demo password** `AikidoDemo!2026`:
 
-| Role | Email | Use |
-|---|---|---|
-| Student | `jamie@fsdp.demo` | Active student, attendance and bookings |
-| Student | `near@fsdp.demo` | Near grading eligibility |
-| Student | `eligible@fsdp.demo` | Eligible grading candidate |
-| Instructor | `instructor-central@fsdp.demo` | Central/West sessions and attendance |
-| Instructor | `instructor-east@fsdp.demo` | East sessions |
-| Admin | `admin@fsdp.demo` | Application reviews, payments, classes and reports |
-| Applicant | `pending@fsdp.demo` | Pending membership approval |
+| Role | Email |
+|---|---|
+| Administrator | `admin@fsdp.demo` |
+| Instructor (Central) | `instructor-central@fsdp.demo` |
+| Instructor (East) | `instructor-east@fsdp.demo` |
+| Student: active | `jamie@fsdp.demo` |
+| Student: almost eligible for grading | `near@fsdp.demo` |
+| Student: eligible for grading | `eligible@fsdp.demo` |
+| Student: ineligible for grading | `ineligible@fsdp.demo` |
+| Pending membership approval | `pending@fsdp.demo` |
+| Changes requested | `changes@fsdp.demo` |
+| Membership approved, payment pending | `payment@fsdp.demo` |
+| Draft membership application | `draft@fsdp.demo` |
+| Rejected membership application | `rejected@fsdp.demo` |
+
 
 Use separate browser profiles/private sessions for multiple roles, or log out between accounts.
 
