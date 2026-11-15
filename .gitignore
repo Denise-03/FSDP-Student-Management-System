@@ -12,3 +12,6 @@ node_modules
 
 # Generated .env file from setup step 4
 backend/.env
+
+# Synthetic Training
+backend/uploads/synthetic-training.pdf
