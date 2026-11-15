@@ -227,7 +227,19 @@ export async function seed() {
     ])
       await insert(
         'GradingRules',
-        { id, fromBelt, toBelt, minMonths, minSessions, minAge, maxAge, label },
+        { id, fromBelt, toBelt, minMonths, minDays: minMonths * 30, minSessions, minAge, maxAge, label },
+        ['id'],
+        tx,
+      );
+    for (const [id, ruleId, type, requiredValue] of [
+      ['extra-rule-1-membership', 'rule-1', 'membership_days', 7],
+      ['extra-rule-2-performance', 'rule-2', 'performance', 1],
+      ['extra-rule-2-centres', 'rule-2', 'training_centres', 2],
+      ['extra-rule-3-membership', 'rule-3', 'membership_days', 14],
+    ])
+      await insert(
+        'GradingExtraRequirements',
+        { id, ruleId, type, requiredValue },
         ['id'],
         tx,
       );
@@ -338,6 +350,20 @@ export async function seed() {
         tx,
       );
     }
+    for (const studentId of ['jamie', 'near', 'eligible'])
+      await insert(
+        'StudentPerformanceEndorsements',
+        {
+          studentId,
+          beltId: 1,
+          rankStart: at(-120).toISOString().slice(0, 10),
+          passed: true,
+          instructorId: 'instructor-central',
+          feedback: 'DEMO: steady and safe technique.',
+        },
+        ['studentId', 'beltId', 'rankStart'],
+        tx,
+      );
     await insert(
       'AuditLogs',
       {
@@ -364,14 +390,14 @@ export async function seed() {
         active: true,
       });
     }
-    for (let index = 1; index <= 6; index++)
+    for (let index = 1; index <= 24; index++)
       sessions.push({
         id: `history-${index}`,
         classTypeId: 'adult',
         dojoId: index % 2 ? 'central' : 'east',
         instructorId: index % 2 ? 'instructor-central' : 'instructor-east',
-        startsAt: at(-20 + index, 10),
-        endsAt: at(-20 + index, 11),
+        startsAt: at(-30 + index, 10),
+        endsAt: at(-30 + index, 11),
         capacity: 12,
         active: true,
       });
@@ -387,8 +413,8 @@ export async function seed() {
     });
     for (const session of sessions) await insert('ClassSessions', session, ['id'], tx);
     for (const studentId of ['jamie', 'near', 'eligible', 'ineligible']) {
-      const count = { jamie: 4, near: 2, eligible: 4, ineligible: 1 }[studentId];
-      for (let index = 1; index <= count + 1; index++) {
+      const count = { jamie: 24, near: 20, eligible: 24, ineligible: 5 }[studentId];
+      for (let index = 1; index <= count + (studentId === 'ineligible' ? 1 : 0); index++) {
         await insert(
           'ClassBookings',
           {
