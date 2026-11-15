@@ -1,11 +1,23 @@
-# Dependencies
-/frontend/node_modules/
-node_modules
+# Node.js dependencies
+node_modules/
 
-# Generated build files
-/frontend/dist/
+# Environment variables
+.env
+.env.*
+!.env.example
 
-# Duplicate directories
+# Build files
+dist/
+
+# Test output
+test-results/
+playwright-report/
+coverage/
+
+# Logs
+*.log
+
+# Duplicate folders inside frontend
 /frontend/database/
 /frontend/docs/
 /frontend/design-reference/
