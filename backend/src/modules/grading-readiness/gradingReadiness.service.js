@@ -65,25 +65,13 @@ export async function readiness(studentId, tx) {
   const membershipDays = profile.expiresAt
     ? Math.max(0, Math.floor((new Date(profile.expiresAt) - Date.now()) / 86400000))
     : 0;
-
   const checks = [];
   const reasons = [];
   function addCheck(code, label, met, detail) {
     checks.push({ code, label, met: Boolean(met), detail });
     if (!met) reasons.push(detail);
   }
-  addCheck(
-    'membership',
-    'Membership in good standing',
-    membershipGood,
-    'An active, unexpired membership is required.',
-  );
-  addCheck(
-    'verified_rank',
-    'Current rank verified',
-    profile.verified,
-    'Your current rank must be verified.',
-  );
+
   if (!rule) {
     reasons.push('No applicable grading transition is configured.');
   } else {
@@ -104,6 +92,18 @@ export async function readiness(studentId, tx) {
        WHERE ruleId=@ruleId ORDER BY type`,
       { ruleId: rule.id },
       tx,
+    );
+    addCheck(
+      'verified_rank',
+      'Current rank verified',
+      profile.verified,
+      'Your current rank must be verified.',
+    );
+    addCheck(
+      'membership',
+      'Membership in good standing',
+      membershipGood,
+      'An active, unexpired membership is required.',
     );
     for (const extra of extras) {
       if (extra.type === 'membership_days') {

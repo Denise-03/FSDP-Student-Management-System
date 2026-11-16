@@ -1205,3 +1205,55 @@ th {
     max-width: 100%;
   }
 }
+
+.readiness-list {
+  list-style: none;
+  margin: 16px 0 24px;
+  padding: 0;
+}
+.readiness-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+.readiness-list li > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.readiness-list strong {
+  display: block;
+}
+.readiness-list small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.readiness-mark {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+}
+.readiness-mark.met {
+  color: #198468;
+}
+.readiness-mark.unmet {
+  color: #c72737;
+}
+.readiness-status {
+  margin-left: auto;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.readiness-status.passed {
+  background: #e2f5ea;
+  color: #087746;
+}
+.readiness-status.failed {
+  background: #fbe9eb;
+  color: #a11c2a;
+}
