@@ -10,7 +10,12 @@ export async function readiness(studentId, tx) {
     tx,
   );
   if (!profile)
-    return { eligible: false, reasons: ['Complete your student profile.'], total: 0 };
+    return {
+      eligible: false,
+      reasons: ['Complete your student profile.'],
+      total: 0,
+      checks: [],
+    };
   const age = ageOn(profile.dateOfBirth);
   const [rule] = await query(
     `SELECT r.*,b.name targetBelt FROM fsdp_v5.GradingRules r
@@ -21,7 +26,9 @@ export async function readiness(studentId, tx) {
   );
   const records = await query(
     `SELECT a.id,s.id eventKey,s.startsAt happenedAt,
-      d.name centre,c.qualifying,a.status,a.verifiedBy
+      d.name centre,
+      CASE WHEN s.active=1 THEN c.qualifying ELSE 0 END qualifying,
+      a.status,a.verifiedBy
     FROM fsdp_v5.AttendanceRecords a
     JOIN fsdp_v5.ClassSessions s ON s.id=a.sessionId
     JOIN fsdp_v5.Dojos d ON d.id=s.dojoId
@@ -33,13 +40,14 @@ export async function readiness(studentId, tx) {
     { studentId },
     tx,
   );
-  // A training event contributes once, after rank start and authorised verification.
+
   const counted = new Map();
   for (const record of records) {
     if (
       record.status === 'present' &&
       record.verifiedBy &&
       record.qualifying &&
+      profile.rankStart &&
       new Date(record.happenedAt) >= new Date(profile.rankStart) &&
       new Date(record.happenedAt) <= new Date()
     )
@@ -49,28 +57,102 @@ export async function readiness(studentId, tx) {
   const days = profile.rankStart
     ? Math.max(0, Math.floor((Date.now() - new Date(profile.rankStart)) / 86400000))
     : 0;
+  const centres = [...new Set([...counted.values()].map((record) => record.centre))];
+  const membershipGood =
+    profile.membershipStatus === 'active' &&
+    profile.expiresAt &&
+    new Date(profile.expiresAt) > new Date();
+  const membershipDays = profile.expiresAt
+    ? Math.max(0, Math.floor((new Date(profile.expiresAt) - Date.now()) / 86400000))
+    : 0;
+
+  const checks = [];
   const reasons = [];
-  if (profile.membershipStatus !== 'active' || new Date(profile.expiresAt) < new Date())
-    reasons.push('An active membership is required.');
-  if (!profile.verified) reasons.push('Your current rank must be verified.');
-  if (!rule) reasons.push('No applicable grading transition is configured.');
-  else {
-    if (total < rule.minSessions)
-      reasons.push(`${rule.minSessions - total} more qualifying session(s) required.`);
-    if (days < rule.minDays)
-      reasons.push(`${rule.minDays - days} more day(s) in rank required.`);
+  function addCheck(code, label, met, detail) {
+    checks.push({ code, label, met: Boolean(met), detail });
+    if (!met) reasons.push(detail);
+  }
+  addCheck(
+    'membership',
+    'Membership in good standing',
+    membershipGood,
+    'An active, unexpired membership is required.',
+  );
+  addCheck(
+    'verified_rank',
+    'Current rank verified',
+    profile.verified,
+    'Your current rank must be verified.',
+  );
+  if (!rule) {
+    reasons.push('No applicable grading transition is configured.');
+  } else {
+    addCheck(
+      'sessions',
+      `Qualifying sessions (${total} / ${rule.minSessions})`,
+      total >= rule.minSessions,
+      `${Math.max(0, rule.minSessions - total)} more qualifying session(s) required.`,
+    );
+    addCheck(
+      'days',
+      `Time at current rank (${days} / ${rule.minDays} days)`,
+      days >= rule.minDays,
+      `${Math.max(0, rule.minDays - days)} more day(s) in rank required.`,
+    );
+    const extras = await query(
+      `SELECT type,requiredValue FROM fsdp_v5.GradingExtraRequirements
+       WHERE ruleId=@ruleId ORDER BY type`,
+      { ruleId: rule.id },
+      tx,
+    );
+    for (const extra of extras) {
+      if (extra.type === 'membership_days') {
+        addCheck(
+          'membership_days',
+          `Membership valid for ${extra.requiredValue} more day(s) (${membershipDays} remaining)`,
+          membershipGood && membershipDays >= extra.requiredValue,
+          `Renew your membership to have at least ${extra.requiredValue} days remaining.`,
+        );
+      } else if (extra.type === 'training_centres') {
+        addCheck(
+          'training_centres',
+          `Training centres attended (${centres.length} / ${extra.requiredValue})`,
+          centres.length >= extra.requiredValue,
+          `Complete qualifying training at ${extra.requiredValue - centres.length} more centre(s).`,
+        );
+      } else if (extra.type === 'performance') {
+        const [endorsement] = await query(
+          `SELECT passed FROM fsdp_v5.StudentPerformanceEndorsements
+           WHERE studentId=@studentId AND beltId=@beltId AND rankStart=@rankStart`,
+          {
+            studentId,
+            beltId: profile.beltId,
+            rankStart: profile.rankStart,
+          },
+          tx,
+        );
+        addCheck(
+          'performance',
+          'Good performance confirmed by instructor',
+          endorsement?.passed,
+          'Ask your instructor for a performance review.',
+        );
+      }
+    }
   }
   return {
-    eligible: reasons.length === 0,
+    eligible: Boolean(rule) && reasons.length === 0,
     total,
     days,
     rule,
     profile,
     reasons,
+    checks,
     records,
-    centres: [...new Set([...counted.values()].map((r) => r.centre))],
+    centres,
   };
 }
+
 export async function refreshReadiness(studentId, tx) {
   const result = await readiness(studentId, tx);
   if (result.eligible)
