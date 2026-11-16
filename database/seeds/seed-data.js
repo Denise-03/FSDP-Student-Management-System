@@ -153,11 +153,12 @@ export async function seed() {
       ['source', 'Public context source', 'https://aikidoshinjukai.com.sg/'],
     ])
       await insert('Settings', { id, label, value }, ['id'], tx);
-    for (const [id, fromBelt, toBelt, minMonths, minSessions, minAge, maxAge, label] of [
+    for (const [id, fromBelt, toBelt, minDays, minMonths, minSessions, minAge, maxAge, label] of [
       [
         'rule-0',
         0,
         1,
+        90,
         3,
         20,
         13,
@@ -168,6 +169,7 @@ export async function seed() {
         'rule-1',
         1,
         2,
+        90,
         3,
         24,
         13,
@@ -178,6 +180,7 @@ export async function seed() {
         'rule-2',
         2,
         3,
+        90,
         3,
         32,
         13,
@@ -188,6 +191,7 @@ export async function seed() {
         'rule-3',
         3,
         4,
+        180,
         6,
         36,
         13,
@@ -198,6 +202,7 @@ export async function seed() {
         'rule-4',
         4,
         5,
+        180,
         6,
         56,
         13,
@@ -208,6 +213,7 @@ export async function seed() {
         'rule-5',
         5,
         6,
+        270,
         9,
         62,
         13,
@@ -218,6 +224,7 @@ export async function seed() {
         'rule-6',
         6,
         7,
+        270,
         9,
         70,
         15,
@@ -227,7 +234,7 @@ export async function seed() {
     ])
       await insert(
         'GradingRules',
-        { id, fromBelt, toBelt, minMonths, minDays: minMonths * 30, minSessions, minAge, maxAge, label },
+        { id, fromBelt, toBelt, minDays, minMonths, minSessions, minAge, maxAge, label },
         ['id'],
         tx,
       );

@@ -6,8 +6,9 @@ node_modules/
 .env.*
 !.env.example
 
-# Build files
+# Extra files
 dist/
+backend/uploads/synthetic-training.pdf
 
 # Logs
 *.log

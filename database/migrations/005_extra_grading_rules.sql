@@ -1,13 +1,3 @@
--- Preserve the original migration history. The existing API uses minDays,
--- while migration 001 originally created minMonths.
-IF COL_LENGTH('fsdp_v5.GradingRules', 'minDays') IS NULL
-BEGIN
-  ALTER TABLE fsdp_v5.GradingRules
-    ADD minDays int NOT NULL CONSTRAINT DF_GradingRules_minDays DEFAULT(0);
-  EXEC(N'UPDATE fsdp_v5.GradingRules SET minDays = minMonths * 30');
-END;
-GO
-
 IF OBJECT_ID('fsdp_v5.GradingExtraRequirements', 'U') IS NULL
 CREATE TABLE fsdp_v5.GradingExtraRequirements (
   id nvarchar(50) PRIMARY KEY,
