@@ -15,7 +15,7 @@ import {
 import { dateTime, mutate } from '../../../shared/lib/api.js';
 export function InstructorDashboardPage() {
   const { user } = useApp();
-  const resource = useResource('/instructor');
+  const resource = useResource('/instructor', 30000);
   return (
     <>
       <Heading
@@ -127,7 +127,7 @@ function PerformanceReview({ student, onDone }) {
   );
 }
 export function StudentProgressPage() {
-  const resource = useResource('/instructor');
+  const resource = useResource('/instructor', 30000);
   const [search, setSearch] = useState('');
   return (
     <>

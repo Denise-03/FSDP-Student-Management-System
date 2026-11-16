@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
-export function useResource(path) {
+export function useResource(path, refreshMs = 0) {
   const [state, setState] = useState({ data: null, error: '', loading: true });
   const [revision, setRevision] = useState(0);
   const reload = useCallback(() => setRevision((value) => value + 1), []);
@@ -18,5 +18,10 @@ export function useResource(path) {
       current = false;
     };
   }, [path, revision]);
+  useEffect(() => {
+    if (!refreshMs) return;
+    const timer = setInterval(reload, refreshMs);
+    return () => clearInterval(timer);
+  }, [reload, refreshMs]);
   return { ...state, reload };
 }
