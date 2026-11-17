@@ -263,7 +263,7 @@ adminDashboardRouter.patch('/rules/:id', async (req, res) => {
     .parse(req.body);
   await transaction(async (tx) => {
     await query(
-      'UPDATE fsdp_v5.GradingRules SET minSessions=@minSessions,minDays=@minDays WHERE id=@id',
+      'UPDATE fsdp_v5.GradingRules SET minSessions=@minSessions,minDays=@minDays,minMonths=FLOOR(@minDays / 30) WHERE id=@id',
       { ...data, id: req.params.id },
       tx,
     );
