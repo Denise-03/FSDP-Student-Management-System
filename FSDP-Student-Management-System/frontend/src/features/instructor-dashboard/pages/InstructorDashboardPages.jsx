@@ -1,0 +1,139 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useApp } from '../../../app/providers.jsx';
+import { useResource } from '../../../shared/hooks/useResource.js';
+import {
+  Heading,
+  Resource,
+  Card,
+  Metrics,
+  Badge,
+  Field,
+  ReadinessCard,
+  Action,
+} from '../../../shared/components/ui.jsx';
+import { dateTime, mutate } from '../../../shared/lib/api.js';
+export function InstructorDashboardPage() {
+  const { user } = useApp();
+  const resource = useResource('/instructor');
+  return (
+    <>
+      <Heading
+        eyebrow="INSTRUCTOR PORTAL"
+        title={`Good to see you, ${user?.name.split(' ')[0]}.`}
+      >
+        Your classes. Your students. Their next milestone.
+      </Heading>
+      <Resource resource={resource}>
+        {(data) => (
+          <>
+            <Metrics
+              items={[
+                [data.sessions.length, 'Assigned sessions'],
+                [data.students.length, 'Assigned students'],
+                [
+                  data.students.filter((s) => s.readiness.eligible).length,
+                  'Eligible students',
+                ],
+                [
+                  data.students.filter((s) => s.lowAttendance).length,
+                  'Follow-up suggested',
+                ],
+              ]}
+            />
+            <div className="grid two">
+              <Card title="Your class sessions">
+                {data.sessions.map((s) => (
+                  <div className="list-row" key={s.id}>
+                    <div className="row spread">
+                      <div>
+                        <h3>{s.className}</h3>
+                        <p>{s.dojoName}</p>
+                        <p>
+                          {dateTime(s.startsAt)} · {s.booked} booked
+                        </p>
+                      </div>
+                      <Link
+                        className="button secondary"
+                        to={`/instructor/classes/${s.id}/attendance`}
+                      >
+                        Open roster →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </Card>
+              <Card title="Student milestones">
+                {data.students.map((s) => (
+                  <div className="list-row" key={s.id}>
+                    <h3>{s.name}</h3>
+                    <p>
+                      {s.readiness.total} / {s.readiness.rule?.minSessions || '—'} sessions
+                    </p>
+                    <Badge>
+                      {s.readiness.eligible
+                        ? 'eligible'
+                        : s.lowAttendance
+                          ? 'follow-up suggested'
+                          : 'in progress'}
+                    </Badge>
+                  </div>
+                ))}
+                <Link className="text-link" to="/instructor/students">
+                  Explore student progress →
+                </Link>
+              </Card>
+            </div>
+          </>
+        )}
+      </Resource>
+    </>
+  );
+}
+export function StudentProgressPage() {
+  const resource = useResource('/instructor');
+  const [search, setSearch] = useState('');
+  return (
+    <>
+      <Heading eyebrow="INSTRUCTOR PORTAL" title="Support every student’s journey.">
+        Cross-centre activity is included before suggesting a follow-up.
+      </Heading>
+      <Field
+        label="Search assigned students"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <Resource resource={resource}>
+        {(data) => (
+          <div className="grid two">
+            {data.students
+              .filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
+              .map((s) => (
+                <div key={s.id}>
+                  <h2>{s.name}</h2>
+                  <ReadinessCard state={s.readiness} />
+                  <Card title="Recent engagement">
+                    <p>
+                      {s.recent} verified visits in the last 30 days across all centres and
+                      external training.
+                    </p>
+                    <Badge>
+                      {s.lowAttendance ? 'follow-up suggested' : 'Training regularly'}
+                    </Badge>
+                    {s.lowAttendance && (
+                      <Action
+                        className="secondary"
+                        run={() => mutate(`/instructor/students/${s.id}/follow-up`, {})}
+                      >
+                        Send supportive in-app reminder
+                      </Action>
+                    )}
+                  </Card>
+                </div>
+              ))}
+          </div>
+        )}
+      </Resource>
+    </>
+  );
+}
