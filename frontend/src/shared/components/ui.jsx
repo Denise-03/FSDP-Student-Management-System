@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { dateTime } from '../lib/api.js';
 export function Heading({ eyebrow = 'YOUR AIKIDO JOURNEY', title, children }) {
   return (
     <div className="heading">
@@ -162,6 +163,27 @@ export function ReadinessCard({ state }) {
           </li>
         ))}
       </ul>
+      {state.performanceReviews?.length > 0 && (
+        <section className="instructor-feedback">
+          <h3>Instructor Feedback</h3>
+          {state.performanceReviews.map((review) => (
+            <div
+              className="list-row"
+              key={`${review.beltId}-${review.rankStart}`}
+            >
+              <div className="row spread">
+                <strong>{review.beltName} Performance Review</strong>
+                <Badge>{review.passed ? 'Performance confirmed' : 'Further training needed'}</Badge>
+              </div>
+              <p>{review.feedback}</p>
+              <small>
+                Reviewed by {review.instructorName} ·{' '}
+                {dateTime(review.updatedAt)}
+              </small>
+            </div>
+          ))}
+        </section>
+      )}
       {!state.rule &&
         state.reasons.map((reason) => (
           <p key={reason}>{reason}</p>

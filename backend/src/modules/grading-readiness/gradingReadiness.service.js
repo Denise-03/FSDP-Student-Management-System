@@ -15,6 +15,7 @@ export async function readiness(studentId, tx) {
       reasons: ['Complete your student profile.'],
       total: 0,
       checks: [],
+      performanceReviews: [],
     };
   const age = ageOn(profile.dateOfBirth);
   const [rule] = await query(
@@ -67,6 +68,24 @@ export async function readiness(studentId, tx) {
     : 0;
   const checks = [];
   const reasons = [];
+  const performanceReviews = await query(
+    `SELECT
+      e.beltId,
+      e.rankStart,
+      e.passed,
+      e.feedback,
+      e.updatedAt,
+      b.name AS beltName,
+      u.name AS instructorName
+    FROM fsdp_v5.StudentPerformanceEndorsements e
+    JOIN fsdp_v5.BeltLevels b ON b.id = e.beltId
+    JOIN fsdp_v5.Users u ON u.id = e.instructorId
+    WHERE e.studentId = @studentId
+      AND LTRIM(RTRIM(e.feedback)) <> ''
+    ORDER BY e.updatedAt DESC`,
+    { studentId },
+    tx,
+  );
   function addCheck(code, label, met, detail) {
     checks.push({ code, label, met: Boolean(met), detail });
     if (!met) reasons.push(detail);
@@ -150,6 +169,7 @@ export async function readiness(studentId, tx) {
     checks,
     records,
     centres,
+    performanceReviews,
   };
 }
 
