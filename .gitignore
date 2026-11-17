@@ -1,29 +1,10 @@
-# Node.js dependencies
 node_modules/
-
-# Environment variables
 .env
 .env.*
 !.env.example
-
-# Build files
-dist/
-
-# Test output
+**/uploads/
+**/dist/
 test-results/
 playwright-report/
-coverage/
-
-# Logs
+*.zip
 *.log
-
-# Duplicate folders inside frontend
-/frontend/database/
-/frontend/docs/
-/frontend/design-reference/
-
-# Generated .env file from setup step 4
-backend/.env
-
-# Synthetic Training
-backend/uploads/synthetic-training.pdf

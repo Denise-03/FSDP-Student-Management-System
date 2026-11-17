@@ -1,251 +1,140 @@
-# FSDP Aikido Student Management System — Windows Setup Guide
+# FSDP Aikido Shinju-Kai student management prototype
 
-**Project:** `FSDP-Student-Management-System` (React/Vite frontend, Express backend, Microsoft SQL Server database).
+A standalone Assignment 1 prototype built from the supplied requirements: React 19/Vite,
+Node.js/Express 5 and Microsoft SQL Server **FSDPDevelopment**. All 29 design concepts have
+live routes; additional administration and payment pages complete the workflow.
+No team repository was inspected or used, and nothing was committed, pushed or deployed.
 
-> **Important:** Run setup on your **own development SQL Server/database**. Do not run seed or reset against a team's shared database with useful data. Do not send anyone your `backend/.env`, SQL passwords, Stripe keys or real documents.
+## Run on Windows
 
-## What the folders mean
-
-```text
-FSDP-Student-Management-System/
-├── frontend/                     React/Vite website
-├── backend/                      Express API and backend/.env.example
-├── database/
-│   ├── migrations/               Ordered SQL changes (001 through 004)
-│   ├── seeds/                    Fictional test data
-│   └── scripts/                  JavaScript migration, seed, verify, reset runners
-├── package.json                  Commands to run from this folder
-├── package-lock.json
-└── README.md
-```
-
-**Do not manually execute all the SQL migration files in SSMS.** Create the database once in SSMS, then run `npm run db:migrate` from PowerShell. The runner applies migrations in order, tracks checksums in `fsdp_v5.Migrations`, and skips already-applied migrations.
-
-## Step 1 — Install / check prerequisites
-
-- **Node.js 22.12 or later**, with npm. A compatible LTS version is recommended.
-- **Microsoft SQL Server Express or Developer** database engine, running locally.
-- **SQL Server Management Studio (SSMS)** for managing/inspecting the database.
-- **Microsoft ODBC Driver 17 for SQL Server** (or change `.env` if you have a different compatible driver).
-- A **Windows account with sufficient permissions** to create `FSDPDevelopment` and its schema/tables.
-
-Check in **PowerShell**:
+Prerequisites: Node.js 22.12+ (tested with 25.4.0), npm, SQL Server Express or Developer,
+Microsoft ODBC Driver 17 for SQL Server, and a Windows login allowed to create objects
+in FSDPDevelopment. Python 3 is needed only for the ZIP command.
 
 ```powershell
-node -v
-npm -v
-Get-OdbcDriver | Where-Object { $_.Name -like '*ODBC Driver*SQL Server*' } | Select-Object Name
-Get-Service -Name 'MSSQL*' | Select-Object Name, Status
-```
-
-The service name is often `MSSQL$SQLEXPRESS` if using SQL Server Express. A different instance name is fine; use *your own actual instance name* in Step 4.
-
-## Step 2 — Extract the ZIP and open the root folder
-
-1. Right-click `FSDP_Student_Management_System_Encoding_Fixed.zip` → **Extract All**.
-2. Open VS Code → **File → Open Folder** → choose the extracted `FSDP-Student-Management-System` folder (the one with `package.json`).
-3. Open **Terminal → New Terminal** (PowerShell).
-4. Confirm your terminal is in the correct folder:
-
-```powershell
-Get-Location
-Test-Path .\package.json
-Test-Path .\backend\.env.example
-```
-
-Both `Test-Path` commands should return `True`.
-
-## Step 3 — Create the database in SSMS
-
-1. Open **SQL Server Management Studio**.
-2. In **Connect to Server**, select **Database Engine**.
-3. Enter **Server name** based on your installed SQL Server instance, e.g. `localhost\SQLEXPRESS` for a typical Express installation. If SSMS already connects with another name, use that exact working name.
-4. Choose **Windows Authentication** and connect.
-5. Click **New Query** and execute:
-
-```sql
-IF DB_ID(N'FSDPDevelopment') IS NULL
-    EXEC(N'CREATE DATABASE FSDPDevelopment');
-GO
-```
-
-6. Refresh **Databases** in Object Explorer. Confirm `FSDPDevelopment` appears.
-
-If SQL Server or database creation fails, check the instance name, service, Windows permissions and whether the database already exists. You need a running **SQL Server database engine**, not only the SSMS application.
-
-## Step 4 — Configure the backend connection (one `.env`)
-
-From the **project root** in PowerShell:
-
-```powershell
-if (-not (Test-Path .\backend\.env)) {
-    Copy-Item .\backend\.env.example .\backend\.env
-}
-notepad .\backend\.env
-```
-
-For the default Windows Authentication setup, use the following values, adjusting **DB_SERVER** and **DB_ODBC_DRIVER** if your computer differs:
-
-```dotenv
-PORT=4000
-FRONTEND_ORIGIN=http://127.0.0.1:5173
-DB_DRIVER=windows
-DB_SERVER=localhost\SQLEXPRESS
-DB_DATABASE=FSDPDevelopment
-DB_ODBC_DRIVER=ODBC Driver 17 for SQL Server
-DB_ENCRYPT=false
-DB_TRUST_CERT=true
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_PAYMENT_CONFIGURATION=
-DEMO_REFERENCE_DATE=
-NODE_ENV=development
-```
-
-The example file may also include `DB_USER=fsdp_app` and `DB_PASSWORD=`. **These are ignored when `DB_DRIVER=windows`**, because that mode uses your Windows login via `Trusted_Connection=Yes`. Do not try to create `fsdp_app` just to use the default Windows mode.
-
-**Only `backend/.env` configures this API's database connection.** A root `.env` or a frontend `.env` will not replace it. Never commit the real `.env` file to Git or share it with the team.
-
-If using **SQL authentication** instead, see the README's `DB_DRIVER=tcp` guidance; you must first create/configure the login and appropriate DB permissions. Do not use arbitrary credentials from another teammate.
-
-## Step 5 — Install the project packages
-
-Run **from the root folder**:
-
-```powershell
+cd FSDP-Student-Management-System
 npm install
-```
-
-Wait for completion. This installs the frontend, backend and root dependencies (including `concurrently`, Vite, SQL drivers and test tools).
-
-If `concurrently is not recognized`, installation was incomplete or ran in the wrong folder. From the root, rerun `npm install` and check `npm ls concurrently`.
-
-## Step 6 — Apply SQL migrations (creates schema and tables)
-
-```powershell
+Copy-Item backend/.env.example backend/.env
+# Edit backend/.env if your SQL Server instance differs.
 npm run db:migrate
-```
-
-This automatically applies the migration files in `database/migrations/`:
-
-- `001_prototype_schema.sql` — builds prototype tables, keys and constraints.
-- `002_fixture_display_labels.sql` — fixes early demonstration labels.
-- `003_approved_fixture_rank.sql` — fixes one approved-but-unpaid fixture's verified rank.
-- `004_repair_mojibake_fixture_labels.sql` — fixes further corrupted demo labels.
-
-All prototype tables are under the **`fsdp_v5` schema**, within the **`FSDPDevelopment` database**. This is not the same as `dbo`, so look in SSMS under `FSDPDevelopment → Tables` for entries beginning `fsdp_v5.`.
-
-On success, you should see `Applied ...` lines for new migrations. On a subsequent run it may print fewer lines because applied migrations are skipped; that is normal. **Do not edit migrations that were already applied.**
-
-## Step 7 — Add fictional demo data
-
-```powershell
 npm run db:seed
 npm run db:verify
-```
-
-The seed populates demo users, centres, classes, bookings, attendance and grading rules.
-
-Successful verification prints something like `SQL Server verification passed:` with counts. The exact future-class count can vary based on when the fixtures were first seeded.
-
-**Note:** Running seed again is designed not to duplicate existing fixture data or overwrite user decisions. It also **does not update the dates** of already-existing fixtures. Do not reset a database that contains teammate work.
-
-## Step 8 — Start the app
-
-```powershell
 npm run dev
 ```
 
-Keep the terminal open. It starts two processes: Express on port 4000 and Vite on port 5173.
+Open **http://127.0.0.1:5173**. API: **http://127.0.0.1:4000/api/health**.
+Use 127.0.0.1 consistently for cookie/origin handling. The API binds to loopback only.
+Vite proxies /api to Express. Stop both development servers with Ctrl+C.
 
-- **Frontend:** `http://127.0.0.1:5173/`
-- **API health:** `http://127.0.0.1:4000/api/health`
-
-A healthy API returns JSON including `"status":"ok"`, database `FSDPDevelopment`, schema `fsdp_v5`. Open the website using **127.0.0.1**, *not* `localhost`, because the project checks the exact frontend origin for login and session security.
-
-Stop the local servers by focusing the PowerShell terminal and pressing **Ctrl+C**.
-
-## Step 9 — Try the fictional test accounts
-
-All accounts below use the **local-only demo password** `AikidoDemo!2026`:
-
-| Role | Email |
-|---|---|
-| Administrator | `admin@fsdp.demo` |
-| Instructor (Central) | `instructor-central@fsdp.demo` |
-| Instructor (East) | `instructor-east@fsdp.demo` |
-| Student: active | `jamie@fsdp.demo` |
-| Student: almost eligible for grading | `near@fsdp.demo` |
-| Student: eligible for grading | `eligible@fsdp.demo` |
-| Student: ineligible for grading | `ineligible@fsdp.demo` |
-| Pending membership approval | `pending@fsdp.demo` |
-| Changes requested | `changes@fsdp.demo` |
-| Membership approved, payment pending | `payment@fsdp.demo` |
-| Draft membership application | `draft@fsdp.demo` |
-| Rejected membership application | `rejected@fsdp.demo` |
-
-
-Use separate browser profiles/private sessions for multiple roles, or log out between accounts.
-
-## Step 10 — Verify the database in SSMS
-
-In a new SSMS query window, run:
+The default Windows connection is `localhost\SQLEXPRESS` using integrated authentication
+through one mssql/msnodesqlv8 pool. No database password is required for that mode.
+If FSDPDevelopment does not exist, create it once in SSMS using:
 
 ```sql
-USE FSDPDevelopment;
-GO
-SELECT name, appliedAt FROM fsdp_v5.Migrations ORDER BY name;
-SELECT COUNT(*) AS UserCount FROM fsdp_v5.Users;
-SELECT TOP (12) email, role FROM fsdp_v5.Users;
-SELECT TOP (10) id, name FROM fsdp_v5.Dojos;
-SELECT COUNT(*) AS AttendanceCount FROM fsdp_v5.AttendanceRecords;
+IF DB_ID(N'FSDPDevelopment') IS NULL
+  EXEC(N'CREATE DATABASE FSDPDevelopment');
 ```
 
-You should see the four tracked migration filenames after a fresh setup, seeded demo accounts, centres and attendance records. These queries **only read data**.
+All prototype objects live in **fsdp_v5**, preserving unrelated schemas and tables.
+Migrations are ordered, checksum tracked and transactional. Startup never resets data.
+For Linux or SQL authentication, set DB_DRIVER=tcp, DB_SERVER to the host,
+DB_USER/DB_PASSWORD to a local app login, and configure encryption/certificate settings.
+The optional Windows driver can be omitted on non-Windows systems.
 
-## Step 11 — Run code and browser tests (optional, recommended)
+## Fictional development accounts
 
-From the project root:
+Every fixture below uses **AikidoDemo!2026**. These are local development accounts,
+not real people or production credentials. Passwords are stored as bcrypt hashes.
+
+| Email                        | Demonstration                                            |
+| ---------------------------- | -------------------------------------------------------- |
+| admin@fsdp.demo              | Membership review, reports, classes, fees, grading rules |
+| instructor-central@fsdp.demo | Mei Chen, Central and West classes; assessments          |
+| instructor-east@fsdp.demo    | Daniel Wong, East classes                                |
+| pending@fsdp.demo            | Alex Tan, pending review; private synthetic PDF          |
+| changes@fsdp.demo            | Morgan Koh, changes requested                            |
+| payment@fsdp.demo            | Riley Teo, approved but unpaid                           |
+| draft@fsdp.demo              | Taylor Goh, draft                                        |
+| rejected@fsdp.demo           | Casey Ong, rejected                                      |
+| jamie@fsdp.demo              | Jamie Lim, active, cross-centre training and assessment  |
+| near@fsdp.demo               | Sam Lee, one verified session from eligibility           |
+| eligible@fsdp.demo           | Jordan Ng, eligible; grading assessment candidate        |
+| ineligible@fsdp.demo         | Chris Low, insufficient sessions and time in rank        |
+
+Guest booking remembers the selected session for 24 hours in sessionStorage through
+registration/login. Application drafts, memberships, bookings, attendance, notifications
+and payments are stored in SQL Server. Each role has server-enforced access controls.
+
+## Commands and verification
 
 ```powershell
 npm run build
 npm test
 npm run e2e
+npm run package:handoff
 ```
 
-## Common errors and fixes
+The browser suite uses installed Microsoft Edge by default. Else set BROWSER_CHANNEL=chrome
+or install Playwright Chromium and set BROWSER_CHANNEL=chromium. It starts local servers
+when needed and records evidence under docs/screenshots. See docs/TEST_RESULTS.md for
+actual runs and the distinction between provider stubs and hosted payments.
+The ZIP is written beside the project folder and contains a SHA-256 source manifest.
+It excludes secrets, private uploads, node_modules, dist, caches, logs and test traces.
 
-| Symptom | What to check / do |
-|---|---|
-| `'concurrently' is not recognized` | Run `npm install` in the root containing `package.json`; check `npm ls concurrently`. |
-| `Login failed for user 'fsdp_app'` | You may be using SQL auth (`DB_DRIVER=tcp`) or the wrong config. For default Windows mode use `DB_DRIVER=windows`; check `backend/.env` and your Windows login's permissions. |
-| Database connection refused / cannot find instance | Check SQL Server service is running, SSMS server name matches `DB_SERVER`, installed ODBC driver name, firewall/instance configuration. |
-| `ODBC Driver ... not found` | Run `Get-OdbcDriver` and install a supported driver or set `DB_ODBC_DRIVER` to the installed one. |
-| `Invalid object name 'fsdp_v5....'` | Create `FSDPDevelopment` and run `npm run db:migrate` against the **same database** as `backend/.env`. |
-| `403 Forbidden` when logging in | Open `http://127.0.0.1:5173/` rather than `http://localhost:5173/`. Set matching `FRONTEND_ORIGIN`; refresh/clear stale session. In DevTools → Network → login → Response, check for origin or CSRF errors. |
-| Login says invalid credentials | Confirm `npm run db:seed` succeeded and use a listed fictional demo account/password. |
-| `VITE ready` but website data is blank | Check API health, backend terminal logs, DB migration and browser Network errors. |
-| Upcoming classes/attendance dates look wrong | Seed dates are anchored to the first seed. Use a **fresh, disposable** dev database for repeatable presentation testing. |
-| Payments/real email do not work | Stripe hosted test Checkout needs test-mode keys and webhook setup. Real email transport is **not configured**; the app uses local in-app/outbox records. Neither is required for basic local browsing. |
+## Stripe test Checkout and PayNow
 
-## Do NOT do these without understanding the consequences
+Hosted Checkout is implemented but **not externally verified** in this build: no local
+test API key or webhook forwarding was supplied. The connected account exposed live
+mode only and was not used for payment operations.
 
-- **Do not run `npm run db:reset-demo` on a shared or valuable database.** It deletes prototype (`fsdp_v5`) records and reseeds; it is guarded by `CONFIRM_DEMO_RESET` but remains destructive.
-- Do not run individual migration SQL files manually *and* then use the runner; this can cause tracking/conflicts.
-- Do not modify applied migration files; add a new numbered migration for schema changes.
-- Do not share or commit `.env`, SQL passwords, Stripe keys or real membership/student documents.
-- Do not assume a running frontend means SQL Server is working: check `/api/health` and `npm run db:verify`.
+Set a minimally scoped test restricted key (`rk_test_...`) or test secret key in
+backend/.env as STRIPE_SECRET_KEY. Never use a live key. Enable Card and PayNow in your
+Stripe **test/sandbox** payment-method settings. Checkout uses SGD one-time amounts
+from persisted charges and dynamic eligible payment methods. No fake QR is generated.
+Optionally set STRIPE_PAYMENT_CONFIGURATION to the appropriate test configuration.
 
-## Setup completion checklist
+Run Stripe CLI forwarding locally:
 
-- [ ] Node/npm, SQL Server engine, SSMS and ODBC driver installed.
-- [ ] Project extracted and opened from root directory.
-- [ ] `FSDPDevelopment` created in SSMS.
-- [ ] Correct `backend/.env` for this PC.
-- [ ] `npm install` completes.
-- [ ] `npm run db:migrate` completes.
-- [ ] `npm run db:seed` and `npm run db:verify` pass.
-- [ ] `npm run dev` starts backend and frontend.
-- [ ] `http://127.0.0.1:4000/api/health` returns OK.
-- [ ] Student, instructor and admin can log in on `http://127.0.0.1:5173`.
-- [ ] `npm run build`, `npm test`, and `npm run e2e` have been run and results recorded.
+```powershell
+stripe listen --forward-to http://127.0.0.1:4000/api/payments/webhook
+```
+
+Put its signing secret into STRIPE_WEBHOOK_SECRET and restart the backend. Handle
+checkout.session.completed, checkout.session.async_payment_succeeded,
+checkout.session.async_payment_failed and checkout.session.expired.
+Only a valid signed test webhook with matching attempt, charge, currency and amount
+can confirm payment. The return page only reads server state. PayNow availability
+depends on account eligibility; use Stripe's generated test QR and authorise/fail on
+its test page. Do not scan a test QR as a live payment.
+
+Without test credentials, membership can be demonstrated using a clearly documented
+admin fee waiver in Payment overview. This is recorded as **waived**, never paid.
+
+## Troubleshooting and constraints
+
+- SQL login failure for fsdp_app: Windows mode uses your Windows account, not fsdp_app.
+  For tcp mode create/configure the app login yourself in SSMS, grant the prototype
+  schema permissions needed, and verify SQL authentication and TCP/IP are enabled.
+  Do not change existing teammate credentials or grant unrestricted production rights.
+- Native-driver errors: use an LTS Node release with a compatible msnodesqlv8 build
+  and the named ODBC driver, or switch to tcp mode. No alternative database is used.
+- Backend reads **backend/.env only** using an absolute path. A root .env or duplicate
+  frontend .env does not configure SQL or Stripe. Frontend secrets are never needed.
+- Encryption: DB_ENCRYPT=false / DB_TRUST_CERT=true are local-development examples.
+  Use validated certificates and encryption outside local development.
+- Browser 403: use http://127.0.0.1:5173, refresh for a current CSRF token, and check
+  FRONTEND_ORIGIN. Login endpoints are rate limited.
+- Evidence: maximum three PDFs, 2 MB each; files are private and admin download only.
+  Use synthetic PDFs only. File signature checks are not production malware scanning.
+- Email is a persisted **development outbox**, with no external transport configured.
+  The system does not claim a real email was delivered.
+- Prices, centres, schedules and grading thresholds are labelled demonstrations.
+  Official logo permission is pending. A licensed illustrative photograph is included
+  with attribution; it does not depict ASK members. See the source and asset registers.
+- Reseeding does not overwrite user actions or duplicate fixtures. Dates are relative
+  to the first seed. To generate a fresh presentation fixture use the explicit
+  development reset documented in docs/MIGRATIONS_AND_SEEDING.md.
+
+Read docs/DEMO_SCRIPT.md for the walkthrough, docs/TEAM_HANDOFF.md for integration,
+and docs/BUSINESS_DECISIONS.md for scope assumptions. The team must review, adapt,
+understand and attribute AI-assisted work according to the tutor's coursework rules.

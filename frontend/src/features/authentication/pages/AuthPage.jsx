@@ -112,9 +112,8 @@ export default function AuthPage({ register = false }) {
           <details>
             <summary>Development demo accounts</summary>
             <p>
-              admin@fsdp.demo / instructor-central@fsdp.demo / instructor-east@fsdp.demo /
-              jamie@fsdp.demo / near@fsdp.demo / eligible@fsdp.demo / ineligible@fsdp.demo /
-              pending@fsdp.demo / changes@fsdp.demo / payment@fsdp.demo / draft@fsdp.demo / rejected@fsdp.demo
+              admin@fsdp.demo / instructor-central@fsdp.demo / jamie@fsdp.demo /
+              near@fsdp.demo / pending@fsdp.demo
             </p>
             <p>Password: AikidoDemo!2026</p>
           </details>

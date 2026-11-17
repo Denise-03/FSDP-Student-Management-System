@@ -75,11 +75,15 @@ export function GradingInfoPage() {
               {data.rules.map((rule) => (
                 <p key={rule.id}>
                   <Badge>{rule.label}</Badge>{' '}
-                  {data.belts.find((b) => b.id === rule.fromBelt)?.name} - {' '}
-                  {data.belts.find((b) => b.id === rule.toBelt)?.name}: {rule.minMonths}{' '}
-                  months and {rule.minSessions} sessions.
+                  {data.belts.find((b) => b.id === rule.fromBelt)?.name} ·{' '}
+                  {data.belts.find((b) => b.id === rule.toBelt)?.name}: {rule.minSessions}{' '}
+                  sessions and {rule.minDays} days.
                 </p>
               ))}
+              <p>
+                These reduced thresholds are synthetic. Confirm official requirements with
+                your instructor.
+              </p>
             </Card>
           </>
         )}

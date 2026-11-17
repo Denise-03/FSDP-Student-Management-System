@@ -76,7 +76,7 @@ export async function seed() {
       [4, '3rd Kyu'],
       [5, '2nd Kyu'],
       [6, '1st Kyu'],
-      [7, 'ShoDan'],
+      [7, 'Shodan'],
     ])
       await insert('BeltLevels', { id, name }, ['id'], tx);
     for (const [id, name, description, minAge, maxAge, minBelt] of [
@@ -153,81 +153,19 @@ export async function seed() {
       ['source', 'Public context source', 'https://aikidoshinjukai.com.sg/'],
     ])
       await insert('Settings', { id, label, value }, ['id'], tx);
-    for (const [id, fromBelt, toBelt, minMonths, minSessions, minAge, maxAge, label] of [
-      [
-        'rule-0',
-        0,
-        1,
-        3,
-        20,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-1',
-        1,
-        2,
-        3,
-        24,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-2',
-        2,
-        3,
-        3,
-        32,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-3',
-        3,
-        4,
-        6,
-        36,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-4',
-        4,
-        5,
-        6,
-        56,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-5',
-        5,
-        6,
-        9,
-        62,
-        13,
-        120,
-        'DEMO RULE',
-      ],
-      [
-        'rule-6',
-        6,
-        7,
-        9,
-        70,
-        15,
-        120,
-        'DEMO RULE',
-      ],
-    ])
+    for (const fromBelt of [0, 1, 2, 3, 4, 5, 6])
       await insert(
         'GradingRules',
-        { id, fromBelt, toBelt, minMonths, minSessions, minAge, maxAge, label },
+        {
+          id: `rule-${fromBelt}`,
+          fromBelt,
+          toBelt: fromBelt + 1,
+          minSessions: 4,
+          minDays: 30,
+          minAge: 4,
+          maxAge: 120,
+          label: 'DEMO RULE — NOT OFFICIAL',
+        },
         ['id'],
         tx,
       );
