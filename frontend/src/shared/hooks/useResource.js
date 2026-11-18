@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
+<<<<<<< HEAD
+export function useResource(path) {
+=======
 export function useResource(path, refreshMs = 0) {
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   const [state, setState] = useState({ data: null, error: '', loading: true });
   const [revision, setRevision] = useState(0);
   const reload = useCallback(() => setRevision((value) => value + 1), []);
@@ -18,10 +22,13 @@ export function useResource(path, refreshMs = 0) {
       current = false;
     };
   }, [path, revision]);
+<<<<<<< HEAD
+=======
   useEffect(() => {
     if (!refreshMs) return;
     const timer = setInterval(reload, refreshMs);
     return () => clearInterval(timer);
   }, [reload, refreshMs]);
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   return { ...state, reload };
 }

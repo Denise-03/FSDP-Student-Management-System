@@ -42,6 +42,15 @@ function DojoEditor({ dojo, onDone }) {
     </Card>
   );
 }
+<<<<<<< HEAD
+function RuleEditor({ rule, onDone }) {
+  const [form, setForm] = useState({
+    minSessions: rule.minSessions,
+    minDays: rule.minDays,
+  });
+  return (
+    <Card title={`${rule.label} - rank ${rule.fromBelt} to ${rule.toBelt}`}>
+=======
 const EXTRA_TYPES = {
   performance: ['Instructor confirms good performance', 1, 1],
   membership_days: ['Minimum days of valid membership remaining', 0, 365],
@@ -114,13 +123,18 @@ function RuleEditor({ rule, extras, onDone }) {
   );
   return (
     <Card title={`${rule.fromBeltName} → ${rule.toBeltName}`}>
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       <Field
         label="Minimum qualifying sessions"
         type="number"
         min={1}
         max={500}
         value={form.minSessions}
+<<<<<<< HEAD
+        onChange={(e) => setForm({ ...form, minSessions: Number(e.target.value) })}
+=======
         onChange={(e) => setForm({ ...form, minSessions: e.target.value })}
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       />
       <Field
         label="Minimum days in rank"
@@ -128,6 +142,13 @@ function RuleEditor({ rule, extras, onDone }) {
         min={0}
         max={3650}
         value={form.minDays}
+<<<<<<< HEAD
+        onChange={(e) => setForm({ ...form, minDays: Number(e.target.value) })}
+      />
+      <Action run={() => mutate(`/admin/rules/${rule.id}`, form, 'PATCH')} onDone={onDone}>
+        Save grading rule
+      </Action>
+=======
         onChange={(e) => setForm({ ...form, minDays: e.target.value })}
       />
       <Action
@@ -202,6 +223,7 @@ function RuleEditor({ rule, extras, onDone }) {
           </Action>
         </div>
       )}
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
     </Card>
   );
 }
@@ -400,6 +422,9 @@ export default function ManageClassesPage() {
             {tab === 'Grading rules' && (
               <div className="grid two">
                 {data.rules.map((rule) => (
+<<<<<<< HEAD
+                  <RuleEditor key={rule.id} rule={rule} onDone={reload} />
+=======
                   <RuleEditor
                     key={rule.id}
                     rule={rule}
@@ -408,6 +433,7 @@ export default function ManageClassesPage() {
                     )}
                     onDone={reload}
                   />
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
                 ))}
               </div>
             )}

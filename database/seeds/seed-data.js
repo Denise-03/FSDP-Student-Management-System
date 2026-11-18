@@ -153,6 +153,21 @@ export async function seed() {
       ['source', 'Public context source', 'https://aikidoshinjukai.com.sg/'],
     ])
       await insert('Settings', { id, label, value }, ['id'], tx);
+<<<<<<< HEAD
+    for (const fromBelt of [0, 1, 2, 3, 4, 5, 6])
+      await insert(
+        'GradingRules',
+        {
+          id: `rule-${fromBelt}`,
+          fromBelt,
+          toBelt: fromBelt + 1,
+          minSessions: 4,
+          minDays: 30,
+          minAge: 4,
+          maxAge: 120,
+          label: 'DEMO RULE — NOT OFFICIAL',
+        },
+=======
     for (const [id, fromBelt, toBelt, minDays, minMonths, minSessions, minAge, maxAge, label] of [
       [
         'rule-0',
@@ -247,6 +262,7 @@ export async function seed() {
       await insert(
         'GradingExtraRequirements',
         { id, ruleId, type, requiredValue },
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
         ['id'],
         tx,
       );
@@ -357,6 +373,8 @@ export async function seed() {
         tx,
       );
     }
+<<<<<<< HEAD
+=======
     for (const studentId of ['jamie', 'near', 'eligible'])
       await insert(
         'StudentPerformanceEndorsements',
@@ -371,6 +389,7 @@ export async function seed() {
         ['studentId', 'beltId', 'rankStart'],
         tx,
       );
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
     await insert(
       'AuditLogs',
       {
@@ -397,14 +416,23 @@ export async function seed() {
         active: true,
       });
     }
+<<<<<<< HEAD
+    for (let index = 1; index <= 6; index++)
+=======
     for (let index = 1; index <= 24; index++)
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       sessions.push({
         id: `history-${index}`,
         classTypeId: 'adult',
         dojoId: index % 2 ? 'central' : 'east',
         instructorId: index % 2 ? 'instructor-central' : 'instructor-east',
+<<<<<<< HEAD
+        startsAt: at(-20 + index, 10),
+        endsAt: at(-20 + index, 11),
+=======
         startsAt: at(-30 + index, 10),
         endsAt: at(-30 + index, 11),
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
         capacity: 12,
         active: true,
       });
@@ -420,8 +448,13 @@ export async function seed() {
     });
     for (const session of sessions) await insert('ClassSessions', session, ['id'], tx);
     for (const studentId of ['jamie', 'near', 'eligible', 'ineligible']) {
+<<<<<<< HEAD
+      const count = { jamie: 4, near: 2, eligible: 4, ineligible: 1 }[studentId];
+      for (let index = 1; index <= count + 1; index++) {
+=======
       const count = { jamie: 24, near: 20, eligible: 24, ineligible: 5 }[studentId];
       for (let index = 1; index <= count + (studentId === 'ineligible' ? 1 : 0); index++) {
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
         await insert(
           'ClassBookings',
           {
@@ -522,7 +555,11 @@ export async function seed() {
         id: 'grading-eligible-today',
         studentId: 'eligible',
         gradingSessionId: 'grading-today',
+<<<<<<< HEAD
+        status: 'submitted',
+=======
         status: 'pending',
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       },
       ['id'],
       tx,
@@ -533,7 +570,11 @@ export async function seed() {
         id: 'grading-jamie-assessed',
         studentId: 'jamie',
         gradingSessionId: 'grading-today',
+<<<<<<< HEAD
+        status: 'assessed',
+=======
         status: 'pending',
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       },
       ['id'],
       tx,

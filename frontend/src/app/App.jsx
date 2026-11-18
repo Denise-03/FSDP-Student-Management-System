@@ -88,7 +88,6 @@ export default function App() {
           <Route path="/admin/reports" element={<CentreReportsPage />} />
           <Route path="/admin/manage" element={<ManageClassesPage />} />
           <Route path="/admin/payments" element={<AdminPaymentsPage />} />
-
         </Route>
         <Route
           path="*"

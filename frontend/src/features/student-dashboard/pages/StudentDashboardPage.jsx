@@ -11,7 +11,11 @@ import {
 import { dateTime } from '../../../shared/lib/api.js';
 export default function StudentDashboardPage() {
   const { user } = useApp();
+<<<<<<< HEAD
+  const resource = useResource('/student');
+=======
   const resource = useResource('/student', 5000);
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   return (
     <>
       <Heading title={`Welcome back, ${user?.name.split(' ')[0]}.`}>

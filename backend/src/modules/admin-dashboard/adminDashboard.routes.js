@@ -10,7 +10,6 @@ import {
 } from '../membership-enrolment/membershipEnrolment.service.js';
 export const adminDashboardRouter = Router();
 adminDashboardRouter.use(roles('admin'));
-
 adminDashboardRouter.get('/', async (req, res) => {
   const [metrics] = await query(`SELECT
     (SELECT COUNT(*) FROM fsdp_v5.MembershipApplications WHERE status='pending_review') pending,
@@ -19,7 +18,6 @@ adminDashboardRouter.get('/', async (req, res) => {
     (SELECT COUNT(*) FROM fsdp_v5.PaymentCharges WHERE status='pending') unpaidCharges`);
   res.json(metrics);
 });
-
 adminDashboardRouter.get('/applications', async (req, res) =>
   res.json(
     await query(`SELECT a.*,u.name,u.email
@@ -27,7 +25,6 @@ adminDashboardRouter.get('/applications', async (req, res) =>
   ORDER BY a.updatedAt DESC`),
   ),
 );
-
 adminDashboardRouter.get('/applications/:id', async (req, res) => {
   const [application] = await query(
     `SELECT a.*,u.name,u.email FROM fsdp_v5.MembershipApplications a
@@ -46,7 +43,6 @@ adminDashboardRouter.get('/applications/:id', async (req, res) => {
   );
   res.json({ application, documents, audit });
 });
-
 adminDashboardRouter.post('/applications/:id/decision', async (req, res) => {
   const data = z
     .object({
@@ -58,7 +54,6 @@ adminDashboardRouter.post('/applications/:id/decision', async (req, res) => {
     .parse(req.body);
   res.json(await decideApplication(req.user.id, req.params.id, data));
 });
-
 adminDashboardRouter.get('/members', async (req, res) =>
   res.json(
     await query(`SELECT u.id,u.name,u.email,p.phone,
@@ -67,7 +62,6 @@ adminDashboardRouter.get('/members', async (req, res) =>
   LEFT JOIN fsdp_v5.Dojos d ON d.id=p.dojoId JOIN fsdp_v5.BeltLevels b ON b.id=p.beltId ORDER BY u.name`),
   ),
 );
-
 adminDashboardRouter.get('/payments', async (req, res) =>
   res.json(
     await query(`SELECT c.*,u.name studentName,
@@ -75,7 +69,6 @@ adminDashboardRouter.get('/payments', async (req, res) =>
   LEFT JOIN fsdp_v5.PaymentAttempts a ON a.chargeId=c.id ORDER BY c.id`),
   ),
 );
-
 adminDashboardRouter.post('/charges/:id/waive', async (req, res) => {
   const { reason } = z
     .object({ reason: z.string().trim().min(10).max(1000) })
@@ -166,7 +159,6 @@ adminDashboardRouter.patch('/dojos/:id', async (req, res) => {
   });
   res.json({ message: 'Dojo saved.' });
 });
-
 adminDashboardRouter.post('/sessions', async (req, res) => {
   const data = z
     .object({
@@ -213,7 +205,6 @@ adminDashboardRouter.post('/sessions', async (req, res) => {
   });
   res.status(201).json({ message: 'Class session created.' });
 });
-
 adminDashboardRouter.patch('/sessions/:id', async (req, res) => {
   const data = z
     .object({ active: z.boolean(), capacity: z.number().int().min(1).max(100) })
@@ -238,7 +229,6 @@ adminDashboardRouter.patch('/sessions/:id', async (req, res) => {
   });
   res.json({ message: 'Session saved.' });
 });
-
 adminDashboardRouter.patch('/settings/registration-fee', async (req, res) => {
   const { amount } = z
     .object({ amount: z.number().int().min(100).max(100000) })
