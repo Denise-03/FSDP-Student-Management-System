@@ -124,15 +124,20 @@ adminDashboardRouter.get('/reports', async (req, res) => {
   res.json({ centres, attendance, monthly });
 });
 adminDashboardRouter.get('/manage', async (req, res) => {
-  const [dojos, sessions, instructors, settings, rules, classTypes] = await Promise.all([
-    query('SELECT * FROM fsdp_v5.Dojos'),
-    query('SELECT * FROM fsdp_v5.ClassSessions ORDER BY startsAt DESC'),
-    query("SELECT id,name FROM fsdp_v5.Users WHERE role='instructor'"),
-    query('SELECT * FROM fsdp_v5.Settings'),
-    query('SELECT * FROM fsdp_v5.GradingRules'),
-    query('SELECT * FROM fsdp_v5.ClassTypes'),
-  ]);
-  res.json({ dojos, sessions, instructors, settings, rules, classTypes });
+  const [dojos, sessions, instructors, settings, rules, classTypes, requirements] = await Promise.all([
+      query('SELECT * FROM fsdp_v5.Dojos'),
+      query('SELECT * FROM fsdp_v5.ClassSessions ORDER BY startsAt DESC'),
+      query("SELECT id,name FROM fsdp_v5.Users WHERE role='instructor'"),
+      query('SELECT * FROM fsdp_v5.Settings'),
+      query(`SELECT r.*, b1.name fromBeltName, b2.name toBeltName
+        FROM fsdp_v5.GradingRules r
+        JOIN fsdp_v5.BeltLevels b1 ON b1.id=r.fromBelt
+        JOIN fsdp_v5.BeltLevels b2 ON b2.id=r.toBelt
+        ORDER BY r.fromBelt`),
+      query('SELECT * FROM fsdp_v5.ClassTypes'),
+      query('SELECT * FROM fsdp_v5.GradingExtraRequirements ORDER BY type'),
+    ]);
+  res.json({ dojos, sessions, instructors, settings, rules, classTypes, requirements, });
 });
 adminDashboardRouter.patch('/dojos/:id', async (req, res) => {
   const data = z
