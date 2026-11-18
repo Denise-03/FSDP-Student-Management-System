@@ -4,7 +4,8 @@ node_modules/
 !.env.example
 dist/
 **/dist/
-backend/uploads/synthetic-training.pdf
+backend/uploads/*
+frontend/node_modules/*
 /frontend/database/
 /frontend/docs/
 /frontend/design-reference/
