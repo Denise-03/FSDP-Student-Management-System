@@ -2,19 +2,8 @@ import { Router } from 'express';
 import { query, transaction } from '../../core/config/database.js';
 import { roles } from '../../core/middleware/auth.js';
 import { readiness } from '../grading-readiness/gradingReadiness.service.js';
-<<<<<<< HEAD
 export const instructorDashboardRouter = Router();
 instructorDashboardRouter.use(roles('instructor'));
-=======
-import { z } from 'zod';
-import { ensure } from '../../core/errors/HttpError.js';
-import { audit } from '../../core/utils/records.js';
-import { canTeachStudent } from '../attendance/attendance.service.js';
-import { refreshReadiness } from '../grading-readiness/gradingReadiness.service.js';
-export const instructorDashboardRouter = Router();
-instructorDashboardRouter.use(roles('instructor'));
-
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 instructorDashboardRouter.get('/', async (req, res) => {
   const sessions = await query(
     `SELECT s.*,c.name className,d.name dojoName,
@@ -67,60 +56,3 @@ instructorDashboardRouter.post('/students/:id/follow-up', async (req, res) => {
   });
   res.json({ message: 'A supportive in-app reminder is saved (one per month).' });
 });
-<<<<<<< HEAD
-=======
-
-instructorDashboardRouter.put('/students/:id/performance', async (req, res) => {
-  const data = z.object({
-    passed: z.boolean(),
-    feedback: z.string().trim().max(500).default(''),
-  }).parse(req.body);
-  const readinessState = await transaction(async (tx) => {
-    await canTeachStudent(req.user.id, req.params.id, tx);
-    const [student] = await query(
-      `SELECT beltId,rankStart FROM fsdp_v5.StudentProfiles
-       WHERE userId=@studentId AND verified=1`,
-      { studentId: req.params.id },
-      tx,
-    );
-    ensure(
-      student?.rankStart,
-      400,
-      'Student must have a verified current rank.',
-    );
-    await query(
-      `IF EXISTS (
-        SELECT 1 FROM fsdp_v5.StudentPerformanceEndorsements
-        WHERE studentId=@studentId AND beltId=@beltId AND rankStart=@rankStart
-      )
-        UPDATE fsdp_v5.StudentPerformanceEndorsements
-        SET passed=@passed,
-            instructorId=@instructorId,
-            feedback=@feedback,
-            updatedAt=SYSUTCDATETIME()
-        WHERE studentId=@studentId AND beltId=@beltId AND rankStart=@rankStart;
-       ELSE
-        INSERT fsdp_v5.StudentPerformanceEndorsements
-          (studentId,beltId,rankStart,passed,instructorId,feedback)
-        VALUES(@studentId,@beltId,@rankStart,@passed,@instructorId,@feedback);`,
-      {
-        ...data,
-        studentId: req.params.id,
-        beltId: student.beltId,
-        rankStart: student.rankStart,
-        instructorId: req.user.id,
-      },
-      tx,
-    );
-    await audit(
-      req.user.id,
-      'student.performance.reviewed',
-      req.params.id,
-      data,
-      tx,
-    );
-    return refreshReadiness(req.params.id, tx);
-  });
-  res.json({ message: 'Performance review saved.', readiness: readinessState });
-});
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94

@@ -42,7 +42,6 @@ function DojoEditor({ dojo, onDone }) {
     </Card>
   );
 }
-<<<<<<< HEAD
 function RuleEditor({ rule, onDone }) {
   const [form, setForm] = useState({
     minSessions: rule.minSessions,
@@ -50,91 +49,13 @@ function RuleEditor({ rule, onDone }) {
   });
   return (
     <Card title={`${rule.label} - rank ${rule.fromBelt} to ${rule.toBelt}`}>
-=======
-const EXTRA_TYPES = {
-  performance: ['Instructor confirms good performance', 1, 1],
-  membership_days: ['Minimum days of valid membership remaining', 0, 365],
-  training_centres: ['Minimum qualifying training centres', 1, 10],
-};
-function validNumber(value, min, max, label) {
-  if (
-    String(value).trim() === '' ||
-    !/^\d+$/.test(String(value)) ||
-    Number(value) < min ||
-    Number(value) > max
-  )
-    throw new Error(`${label} must be a whole number from ${min} to ${max}.`);
-  return Number(value);
-}
-function ExtraRuleEditor({ ruleId, item, onDone }) {
-  const [value, setValue] = useState(String(item.requiredValue));
-  const [label, min, max] = EXTRA_TYPES[item.type];
-  return (
-    <div className="list-row">
-      <h3>{label}</h3>
-      {min !== max && (
-        <Field
-          label="Required value"
-          type="number"
-          min={min}
-          max={max}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      )}
-      <div className="row">
-        <Action
-          run={() =>
-            mutate(`/admin/rules/${ruleId}/additional`, {
-              type: item.type,
-              requiredValue: validNumber(value, min, max, label),
-            }, 'PUT')
-          }
-          onDone={onDone}
-        >
-          Save
-        </Action>
-        <Action
-          className="secondary"
-          run={() =>
-            mutate(
-              `/admin/rules/${ruleId}/additional/${item.type}`,
-              undefined,
-              'DELETE',
-            )
-          }
-          onDone={onDone}
-        >
-          Remove
-        </Action>
-      </div>
-    </div>
-  );
-}
-function RuleEditor({ rule, extras, onDone }) {
-  const [form, setForm] = useState({
-    minSessions: String(rule.minSessions),
-    minDays: String(rule.minDays),
-  });
-  const [newType, setNewType] = useState('');
-  const [newValue, setNewValue] = useState('1');
-  const available = Object.keys(EXTRA_TYPES).filter(
-    (type) => !extras.some((item) => item.type === type),
-  );
-  return (
-    <Card title={`${rule.fromBeltName} → ${rule.toBeltName}`}>
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       <Field
         label="Minimum qualifying sessions"
         type="number"
         min={1}
         max={500}
         value={form.minSessions}
-<<<<<<< HEAD
         onChange={(e) => setForm({ ...form, minSessions: Number(e.target.value) })}
-=======
-        onChange={(e) => setForm({ ...form, minSessions: e.target.value })}
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       />
       <Field
         label="Minimum days in rank"
@@ -142,88 +63,11 @@ function RuleEditor({ rule, extras, onDone }) {
         min={0}
         max={3650}
         value={form.minDays}
-<<<<<<< HEAD
         onChange={(e) => setForm({ ...form, minDays: Number(e.target.value) })}
       />
       <Action run={() => mutate(`/admin/rules/${rule.id}`, form, 'PATCH')} onDone={onDone}>
         Save grading rule
       </Action>
-=======
-        onChange={(e) => setForm({ ...form, minDays: e.target.value })}
-      />
-      <Action
-        run={() =>
-          mutate(`/admin/rules/${rule.id}`, {
-            minSessions: validNumber(form.minSessions, 1, 500, 'Sessions'),
-            minDays: validNumber(form.minDays, 0, 3650, 'Days in rank'),
-          }, 'PATCH')
-        }
-        onDone={onDone}
-      >
-        Save grading rule
-      </Action>
-      <h1></h1>
-      <h3>Additional requirements</h3>
-      <p>Active membership and rank verification are always required.</p>
-      {extras.map((item) => (
-        <ExtraRuleEditor
-          key={`${item.id}-${item.requiredValue}`}
-          item={item}
-          ruleId={rule.id}
-          onDone={onDone}
-        />
-      ))}
-      {available.length > 0 && (
-        <div className="list-row">
-          <Field
-            label="Add a requirement"
-            value={newType}
-            onChange={(e) => {
-              setNewType(e.target.value);
-              setNewValue('1');
-            }}
-          >
-            <option value="">Select a rule</option>
-            {available.map((type) => (
-              <option key={type} value={type}>
-                {EXTRA_TYPES[type][0]}
-              </option>
-            ))}
-          </Field>
-          {newType &&
-            EXTRA_TYPES[newType][1] !== EXTRA_TYPES[newType][2] && (
-              <Field
-                label="Required value"
-                type="number"
-                min={EXTRA_TYPES[newType][1]}
-                max={EXTRA_TYPES[newType][2]}
-                value={newValue}
-                onChange={(e) => setNewValue(e.target.value)}
-              />
-            )}
-          <Action
-            disabled={!newType}
-            run={() =>
-              mutate(`/admin/rules/${rule.id}/additional`, {
-                type: newType,
-                requiredValue: validNumber(
-                  newValue,
-                  EXTRA_TYPES[newType][1],
-                  EXTRA_TYPES[newType][2],
-                  EXTRA_TYPES[newType][0],
-                ),
-              }, 'PUT')
-            }
-            onDone={() => {
-              setNewType('');
-              onDone();
-            }}
-          >
-            Add requirement
-          </Action>
-        </div>
-      )}
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
     </Card>
   );
 }
@@ -422,18 +266,7 @@ export default function ManageClassesPage() {
             {tab === 'Grading rules' && (
               <div className="grid two">
                 {data.rules.map((rule) => (
-<<<<<<< HEAD
                   <RuleEditor key={rule.id} rule={rule} onDone={reload} />
-=======
-                  <RuleEditor
-                    key={rule.id}
-                    rule={rule}
-                    extras={data.requirements.filter(
-                      (item) => item.ruleId === rule.id,
-                    )}
-                    onDone={reload}
-                  />
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
                 ))}
               </div>
             )}
