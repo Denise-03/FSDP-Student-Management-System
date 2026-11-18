@@ -9,47 +9,17 @@ export async function audit(actorId, action, entityId, details, tx) {
     tx,
   );
 }
-export async function notify(userId,eventKey,message,tx,relatedType = null,relatedId = null,) {
+export async function notify(userId, eventKey, message, tx) {
   const notificationId = id();
-
   await query(
     `IF NOT EXISTS (
-      SELECT 1
-      FROM fsdp_v5.Notifications
-      WHERE userId = @userId
-        AND eventKey = @eventKey
-    )
-
-    BEGIN
-      INSERT fsdp_v5.Notifications(
-        id,
-        userId,
-        eventKey,
-        message,
-        relatedType,
-        relatedId
-      )
-
-      VALUES(
-        @id,
-        @userId,
-        @eventKey,
-        @message,
-        @relatedType,
-        @relatedId
-      );
-
-      INSERT fsdp_v5.NotificationOutbox(notificationId)
-      VALUES(@id);
+      SELECT 1 FROM fsdp_v5.Notifications WHERE userId=@userId AND eventKey=@eventKey
+    ) BEGIN
+      INSERT fsdp_v5.Notifications(id,userId,eventKey,message)
+        VALUES(@id,@userId,@eventKey,@message);
+      INSERT fsdp_v5.NotificationOutbox(notificationId) VALUES(@id);
     END`,
-    {
-      id: notificationId,
-      userId,
-      eventKey,
-      message,
-      relatedType,
-      relatedId,
-    },
+    { id: notificationId, userId, eventKey, message },
     tx,
   );
 }

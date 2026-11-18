@@ -30,6 +30,7 @@ attendanceRouter.put('/sessions/:id', roles('instructor'), async (req, res) => {
     .parse(req.body);
   res.json(await markAttendance(req.user.id, req.params.id, data.studentId, data.status));
 });
+<<<<<<< HEAD
 attendanceRouter.delete('/sessions/:id/:studentId', roles('instructor'), async (req, res) => {
   const state = await transaction(async (tx) => {
     const session = await assignedSession(req.user.id, req.params.id, tx);
@@ -59,6 +60,8 @@ attendanceRouter.delete('/sessions/:id/:studentId', roles('instructor'), async (
   });
   res.json({ message: 'Incorrect attendance record removed.', readiness: state });
 });
+=======
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
 attendanceRouter.post('/external', memberRoles, async (req, res) => {
   const data = z
     .object({

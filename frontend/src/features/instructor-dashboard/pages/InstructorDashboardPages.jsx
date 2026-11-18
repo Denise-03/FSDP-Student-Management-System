@@ -15,7 +15,11 @@ import {
 import { dateTime, mutate } from '../../../shared/lib/api.js';
 export function InstructorDashboardPage() {
   const { user } = useApp();
+<<<<<<< HEAD
   const resource = useResource('/instructor', 5000);
+=======
+  const resource = useResource('/instructor');
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
   return (
     <>
       <Heading
@@ -90,6 +94,7 @@ export function InstructorDashboardPage() {
     </>
   );
 }
+<<<<<<< HEAD
 function PerformanceReview({ student, onDone }) {
   const [passed, setPassed] = useState('true');
   const [feedback, setFeedback] = useState('');
@@ -128,6 +133,10 @@ function PerformanceReview({ student, onDone }) {
 }
 export function StudentProgressPage() {
   const resource = useResource('/instructor', 5000);
+=======
+export function StudentProgressPage() {
+  const resource = useResource('/instructor');
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
   const [search, setSearch] = useState('');
   return (
     <>
@@ -147,6 +156,7 @@ export function StudentProgressPage() {
               .map((s) => (
                 <div key={s.id}>
                   <h2>{s.name}</h2>
+<<<<<<< HEAD
                   <ReadinessCard state={s.readiness} />                
                   {s.readiness.checks?.some(
                     (check) => check.code === 'performance'
@@ -156,6 +166,9 @@ export function StudentProgressPage() {
                       onDone={resource.reload}
                     />
                   )}
+=======
+                  <ReadinessCard state={s.readiness} />
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
                   <Card title="Recent engagement">
                     <p>
                       {s.recent} verified visits in the last 30 days across all centres and
