@@ -15,7 +15,11 @@ import {
 import { dateTime, mutate } from '../../../shared/lib/api.js';
 export function InstructorDashboardPage() {
   const { user } = useApp();
+<<<<<<< HEAD
   const resource = useResource('/instructor');
+=======
+  const resource = useResource('/instructor', 5000);
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   return (
     <>
       <Heading
@@ -90,8 +94,49 @@ export function InstructorDashboardPage() {
     </>
   );
 }
+<<<<<<< HEAD
 export function StudentProgressPage() {
   const resource = useResource('/instructor');
+=======
+function PerformanceReview({ student, onDone }) {
+  const [passed, setPassed] = useState('true');
+  const [feedback, setFeedback] = useState('');
+  return (
+    <Card title="Training performance review">
+      <p>
+        Record an instructor endorsement for this student's current belt.
+      </p>
+      <Field
+        label="Performance"
+        value={passed}
+        onChange={(e) => setPassed(e.target.value)}
+      >
+        <option value="true">Good performance confirmed</option>
+        <option value="false">Further training needed</option>
+      </Field>
+      <Field
+        label="Feedback"
+        value={feedback}
+        maxLength={500}
+        onChange={(e) => setFeedback(e.target.value)}
+      />
+      <Action
+        run={() =>
+          mutate(`/instructor/students/${student.id}/performance`, {
+            passed: passed === 'true',
+            feedback,
+          }, 'PUT')
+        }
+        onDone={onDone}
+      >
+        Save performance review
+      </Action>
+    </Card>
+  );
+}
+export function StudentProgressPage() {
+  const resource = useResource('/instructor', 5000);
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   const [search, setSearch] = useState('');
   return (
     <>
@@ -111,7 +156,19 @@ export function StudentProgressPage() {
               .map((s) => (
                 <div key={s.id}>
                   <h2>{s.name}</h2>
+<<<<<<< HEAD
                   <ReadinessCard state={s.readiness} />
+=======
+                  <ReadinessCard state={s.readiness} />                
+                  {s.readiness.checks?.some(
+                    (check) => check.code === 'performance'
+                  ) && (
+                    <PerformanceReview
+                      student={s}
+                      onDone={resource.reload}
+                    />
+                  )}
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
                   <Card title="Recent engagement">
                     <p>
                       {s.recent} verified visits in the last 30 days across all centres and

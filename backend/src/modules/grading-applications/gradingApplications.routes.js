@@ -47,8 +47,13 @@ gradingApplicationsRouter.post('/', async (req, res) => {
       'You already applied for this grading session.',
     );
     await query(
+<<<<<<< HEAD
       `INSERT fsdp_v5.GradingApplications(id,studentId,gradingSessionId)
       VALUES(@id,@studentId,@gradingSessionId)`,
+=======
+      `INSERT fsdp_v5.GradingApplications(id,studentId,gradingSessionId, status)
+      VALUES(@id,@studentId,@gradingSessionId, 'pending')`,
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       { id: applicationId, studentId: req.user.id, gradingSessionId },
       tx,
     );

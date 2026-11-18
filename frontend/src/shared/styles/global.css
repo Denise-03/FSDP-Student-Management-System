@@ -805,6 +805,7 @@ th {
   border: 1px solid #d5d5d5;
   margin-bottom: 20px;
 }
+<<<<<<< HEAD
 .belt-2,
 .belt-3,
 .belt-4,
@@ -814,6 +815,29 @@ th {
 }
 .belt-7 {
   background: #151c24;
+=======
+.belt-1 {
+  background: #2370ce;
+}
+.belt-2 {
+  background: #2370ce;
+  border: 2.5px solid #f4d030;
+}
+.belt-3 {
+  background: #856040;
+}
+.belt-4 {
+  background: #856040;
+  border: 2.5px solid #f4d030;
+}
+.belt-5 {
+  background: #151c24;
+}
+.belt-6,
+.belt-7 {
+  background: #151c24;
+  border: 2.5px solid #f4d030;
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 }
 .empty {
   padding: 25px;
@@ -1193,3 +1217,58 @@ th {
     max-width: 100%;
   }
 }
+<<<<<<< HEAD
+=======
+
+.readiness-list {
+  list-style: none;
+  margin: 16px 0 24px;
+  padding: 0;
+}
+.readiness-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+.readiness-list li > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.readiness-list strong {
+  display: block;
+}
+.readiness-list small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.readiness-mark {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+}
+.readiness-mark.met {
+  color: #198468;
+}
+.readiness-mark.unmet {
+  color: #c72737;
+}
+.readiness-status {
+  margin-left: auto;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.readiness-status.passed {
+  background: #e2f5ea;
+  color: #087746;
+}
+.readiness-status.failed {
+  background: #fbe9eb;
+  color: #a11c2a;
+}
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94

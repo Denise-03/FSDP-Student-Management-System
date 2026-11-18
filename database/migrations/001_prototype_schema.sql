@@ -156,8 +156,14 @@ CREATE TABLE fsdp_v5.GradingRules (
   id nvarchar(50) PRIMARY KEY,
   fromBelt int NOT NULL REFERENCES fsdp_v5.BeltLevels(id),
   toBelt int NOT NULL REFERENCES fsdp_v5.BeltLevels(id),
+<<<<<<< HEAD
   minSessions int NOT NULL CHECK(minSessions>0),
   minDays int NOT NULL CHECK(minDays>=0),
+=======
+  minDays int NOT NULL CONSTRAINT DF_GradingRules_minDays DEFAULT(0),
+  minMonths int NOT NULL CHECK(minMonths>0),
+  minSessions int NOT NULL CHECK(minSessions>=0),
+>>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   minAge int NOT NULL DEFAULT 0,
   maxAge int NOT NULL DEFAULT 120,
   label nvarchar(150) NOT NULL,

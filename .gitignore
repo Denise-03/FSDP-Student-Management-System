@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+**/dist/
+backend/uploads/synthetic-training.pdf
+/frontend/database/
+/frontend/docs/
+/frontend/design-reference/
+backend/.env
+**/uploads/
+test-results/
+playwright-report/
+*.zip
+*.log
