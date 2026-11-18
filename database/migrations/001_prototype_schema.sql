@@ -152,8 +152,7 @@ CREATE TABLE fsdp_v5.ExternalTrainingRecords (
 );
 GO
 IF OBJECT_ID('fsdp_v5.GradingRules', 'U') IS NULL
-CREATE TABLE fsdp_v5.GradingRules 
-(
+CREATE TABLE fsdp_v5.GradingRules (
   id nvarchar(50) PRIMARY KEY,
   fromBelt int NOT NULL REFERENCES fsdp_v5.BeltLevels(id),
   toBelt int NOT NULL REFERENCES fsdp_v5.BeltLevels(id),

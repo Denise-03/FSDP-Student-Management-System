@@ -805,27 +805,15 @@ th {
   border: 1px solid #d5d5d5;
   margin-bottom: 20px;
 }
-.belt-1 {
-  background: #2370ce;
+.belt-2,
+.belt-3,
+.belt-4,
+.belt-5,
+.belt-6 {
+  background: #897053;
 }
-.belt-2 {
-  background: #2370ce;
-  border: 2.5px solid #f4d030;
-}
-.belt-3 {
-  background: #856040;
-}
-.belt-4 {
-  background: #856040;
-  border: 2.5px solid #f4d030;
-}
-.belt-5 {
-  background: #151c24;
-}
-.belt-6,
 .belt-7 {
   background: #151c24;
-  border: 2.5px solid #f4d030;
 }
 .empty {
   padding: 25px;

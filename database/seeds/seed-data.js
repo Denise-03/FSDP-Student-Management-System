@@ -76,7 +76,7 @@ export async function seed() {
       [4, '3rd Kyu'],
       [5, '2nd Kyu'],
       [6, '1st Kyu'],
-      [7, 'ShoDan'],
+      [7, 'Shodan'],
     ])
       await insert('BeltLevels', { id, name }, ['id'], tx);
     for (const [id, name, description, minAge, maxAge, minBelt] of [

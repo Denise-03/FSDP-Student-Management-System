@@ -74,12 +74,16 @@ export function GradingInfoPage() {
               </p>
               {data.rules.map((rule) => (
                 <p key={rule.id}>
-                  {/* <Badge>{rule.label}</Badge>{' '} */}
+                  <Badge>{rule.label}</Badge>{' '}
                   {data.belts.find((b) => b.id === rule.fromBelt)?.name} - {' '}
                   {data.belts.find((b) => b.id === rule.toBelt)?.name}: {rule.minDays}{' '}
                   days ({rule.minMonths}{' months'}) and {rule.minSessions} sessions.
                 </p>
               ))}
+              <p>
+                These reduced thresholds are synthetic. Confirm official requirements with
+                your instructor.
+              </p>
             </Card>
           </>
         )}

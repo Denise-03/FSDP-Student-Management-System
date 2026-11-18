@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { query, transaction } from '../../core/config/database.js';
 import { roles } from '../../core/middleware/auth.js';
 import { ensure } from '../../core/errors/HttpError.js';
-import { id, audit } from '../../core/utils/records.js';
+import { id, audit, notify } from '../../core/utils/records.js';
 import {
   decideApplication,
   activateMembership,
@@ -346,3 +346,155 @@ adminDashboardRouter.delete('/rules/:id/additional/:type', async (req, res) => {
   });
   res.json({ message: 'Additional requirement removed.' });
 });
+adminDashboardRouter.get('/grading-applications', async (req, res) => {
+  res.json(
+    await query(`
+      SELECT
+        g.id,
+        g.studentId,
+        g.gradingSessionId,
+        g.status,
+        g.createdAt,
+        g.decisionReason,
+        g.reviewedAt,
+
+        u.name studentName,
+        u.email,
+
+        s.name sessionName,
+        s.startsAt,
+        s.venue,
+
+        p.beltId currentBelt,
+        currentBelt.name currentGrade,
+        targetBelt.name targetGrade,
+
+        a.result instructorRecommendation,
+        a.feedback instructorFeedback,
+        a.acknowledgement instructorAcknowledgement,
+        a.submittedAt assessedAt
+
+      FROM fsdp_v5.GradingApplications g
+
+      JOIN fsdp_v5.Users u
+        ON u.id = g.studentId
+
+      JOIN fsdp_v5.GradingSessions s
+        ON s.id = g.gradingSessionId
+
+      JOIN fsdp_v5.StudentProfiles p
+        ON p.userId = g.studentId
+
+      JOIN fsdp_v5.BeltLevels currentBelt
+        ON currentBelt.id = p.beltId
+
+      OUTER APPLY (
+      SELECT TOP 1 nextBelt.name
+      FROM fsdp_v5.GradingRules AS gr
+      JOIN fsdp_v5.BeltLevels AS nextBelt
+      ON nextBelt.id = gr.toBelt
+      WHERE gr.fromBelt = p.beltId
+      ORDER BY gr.minAge
+      ) targetBelt
+
+      LEFT JOIN fsdp_v5.InstructorAssessments a
+        ON a.gradingApplicationId = g.id
+
+      ORDER BY
+        CASE WHEN g.status = 'pending' THEN 0 ELSE 1 END,
+        g.createdAt DESC
+    `),
+  );
+});
+adminDashboardRouter.post(
+  '/grading-applications/:id/decision',
+  async (req, res) => {
+    const data = z
+      .object({
+        decision: z.enum(['approved', 'rejected']),
+        reason: z.string().trim().max(1000).default(''),
+      })
+      .parse(req.body);
+
+    await transaction(async (tx) => {
+      const [application] = await query(
+        `SELECT
+          g.id,
+          g.studentId,
+          g.status,
+          s.name sessionName
+
+        FROM fsdp_v5.GradingApplications g
+
+        JOIN fsdp_v5.GradingSessions s
+          ON s.id = g.gradingSessionId
+
+        WHERE g.id = @id`,
+        { id: req.params.id },
+        tx,
+      );
+
+      ensure(
+        application,
+        404,
+        'Grading application not found.',
+      );
+
+      ensure(
+        application.status === 'pending',
+        409,
+        'This application has already been reviewed.',
+      );
+
+      await query(
+        `UPDATE fsdp_v5.GradingApplications
+
+        SET
+          status = @decision,
+          decisionReason = @reason,
+          reviewedBy = @reviewedBy,
+          reviewedAt = SYSUTCDATETIME()
+
+        WHERE id = @id
+          AND status = 'pending'`,
+        {
+          id: application.id,
+          decision: data.decision,
+          reason: data.reason || null,
+          reviewedBy: req.user.id,
+        },
+        tx,
+      );
+
+      const statusLabel =
+        data.decision === 'approved'
+          ? 'approved'
+          : 'rejected';
+
+      const reasonText = data.reason
+        ? ` Reason: ${data.reason}`
+        : '';
+
+      await notify(
+        application.studentId,
+        `grading-decision:${application.id}:${data.decision}`,
+        `Your grading application for ${application.sessionName} has been ${statusLabel}.${reasonText}`,
+        tx,
+        'grading_application',
+        application.id,
+      );
+
+      await audit(
+        req.user.id,
+        `grading.application.${data.decision}`,
+        application.id,
+        data,
+        tx,
+      );
+    });
+
+    res.json({
+      message: `Grading application ${data.decision}.`,
+    });
+  },
+);
