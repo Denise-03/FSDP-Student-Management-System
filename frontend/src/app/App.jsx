@@ -26,10 +26,7 @@ import GradingApplicationsPage from '../features/grading-applications/pages/Grad
 import NotificationsPage from '../features/notifications/pages/NotificationsPage.jsx';
 import ProfilePage from '../features/student-profiles/pages/ProfilePage.jsx';
 import PaymentsPage from '../features/payments/pages/PaymentsPage.jsx';
-<<<<<<< HEAD
-=======
 import GradingApplicationReviewsPage from '../features/admin-dashboard/pages/GradingApplicationReviewsPage.jsx';
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 import {
   InstructorDashboardPage,
   StudentProgressPage,
@@ -69,14 +66,7 @@ export default function App() {
           <Route path="/student/bookings" element={<MyBookingsPage />} />
           <Route path="/student/attendance" element={<StudentAttendanceHistoryPage />} />
           <Route path="/student/grading-readiness" element={<GradingReadinessPage />} />
-<<<<<<< HEAD
-          <Route
-            path="/student/grading-applications"
-            element={<GradingApplicationsPage />}
-          />
-=======
           <Route path="/student/grading-applications" element={<GradingApplicationsPage />}/>
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
           <Route path="/student/notifications" element={<NotificationsPage />} />
           <Route path="/student/membership" element={<PaymentsPage />} />
           <Route path="/student/profile" element={<ProfilePage />} />
@@ -93,18 +83,11 @@ export default function App() {
         <Route element={<RoleGuard allowed={['admin']} />}>
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/enrolments" element={<ApplicationReviewsPage />} />
-<<<<<<< HEAD
-=======
           <Route path="/admin/grading-applications" element={<GradingApplicationReviewsPage />}/>
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
           <Route path="/admin/members" element={<MembersPage />} />
           <Route path="/admin/reports" element={<CentreReportsPage />} />
           <Route path="/admin/manage" element={<ManageClassesPage />} />
           <Route path="/admin/payments" element={<AdminPaymentsPage />} />
-<<<<<<< HEAD
-=======
-
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
         </Route>
         <Route
           path="*"
