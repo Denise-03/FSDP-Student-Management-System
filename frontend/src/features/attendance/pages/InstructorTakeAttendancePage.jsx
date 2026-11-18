@@ -41,8 +41,6 @@ export default function InstructorTakeAttendancePage() {
                         Mark {status}
                       </Action>
                     ))}
-<<<<<<< HEAD
-=======
                     {student.status && (
                       <Action
                         className="secondary"
@@ -58,7 +56,6 @@ export default function InstructorTakeAttendancePage() {
                         Remove incorrect record
                       </Action>
                     )}
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
                   </div>
                 </div>
               ))

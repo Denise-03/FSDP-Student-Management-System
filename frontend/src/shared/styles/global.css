@@ -805,17 +805,6 @@ th {
   border: 1px solid #d5d5d5;
   margin-bottom: 20px;
 }
-<<<<<<< HEAD
-.belt-2,
-.belt-3,
-.belt-4,
-.belt-5,
-.belt-6 {
-  background: #897053;
-}
-.belt-7 {
-  background: #151c24;
-=======
 .belt-1 {
   background: #2370ce;
 }
@@ -837,7 +826,6 @@ th {
 .belt-7 {
   background: #151c24;
   border: 2.5px solid #f4d030;
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 }
 .empty {
   padding: 25px;
@@ -1217,8 +1205,6 @@ th {
     max-width: 100%;
   }
 }
-<<<<<<< HEAD
-=======
 
 .readiness-list {
   list-style: none;
@@ -1271,4 +1257,3 @@ th {
   background: #fbe9eb;
   color: #a11c2a;
 }
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94

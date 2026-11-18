@@ -10,9 +10,6 @@ export async function readiness(studentId, tx) {
     tx,
   );
   if (!profile)
-<<<<<<< HEAD
-    return { eligible: false, reasons: ['Complete your student profile.'], total: 0 };
-=======
     return {
       eligible: false,
       reasons: ['Complete your student profile.'],
@@ -20,7 +17,6 @@ export async function readiness(studentId, tx) {
       checks: [],
       performanceReviews: [],
     };
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   const age = ageOn(profile.dateOfBirth);
   const [rule] = await query(
     `SELECT r.*,b.name targetBelt FROM fsdp_v5.GradingRules r
@@ -31,13 +27,9 @@ export async function readiness(studentId, tx) {
   );
   const records = await query(
     `SELECT a.id,s.id eventKey,s.startsAt happenedAt,
-<<<<<<< HEAD
-      d.name centre,c.qualifying,a.status,a.verifiedBy
-=======
       d.name centre,
       CASE WHEN s.active=1 THEN c.qualifying ELSE 0 END qualifying,
       a.status,a.verifiedBy
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
     FROM fsdp_v5.AttendanceRecords a
     JOIN fsdp_v5.ClassSessions s ON s.id=a.sessionId
     JOIN fsdp_v5.Dojos d ON d.id=s.dojoId
@@ -49,21 +41,14 @@ export async function readiness(studentId, tx) {
     { studentId },
     tx,
   );
-<<<<<<< HEAD
-  // A training event contributes once, after rank start and authorised verification.
-=======
 
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
   const counted = new Map();
   for (const record of records) {
     if (
       record.status === 'present' &&
       record.verifiedBy &&
       record.qualifying &&
-<<<<<<< HEAD
-=======
       profile.rankStart &&
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
       new Date(record.happenedAt) >= new Date(profile.rankStart) &&
       new Date(record.happenedAt) <= new Date()
     )
@@ -73,21 +58,6 @@ export async function readiness(studentId, tx) {
   const days = profile.rankStart
     ? Math.max(0, Math.floor((Date.now() - new Date(profile.rankStart)) / 86400000))
     : 0;
-<<<<<<< HEAD
-  const reasons = [];
-  if (profile.membershipStatus !== 'active' || new Date(profile.expiresAt) < new Date())
-    reasons.push('An active membership is required.');
-  if (!profile.verified) reasons.push('Your current rank must be verified.');
-  if (!rule) reasons.push('No applicable grading transition is configured.');
-  else {
-    if (total < rule.minSessions)
-      reasons.push(`${rule.minSessions - total} more qualifying session(s) required.`);
-    if (days < rule.minDays)
-      reasons.push(`${rule.minDays - days} more day(s) in rank required.`);
-  }
-  return {
-    eligible: reasons.length === 0,
-=======
   const centres = [...new Set([...counted.values()].map((record) => record.centre))];
   const membershipGood =
     profile.membershipStatus === 'active' &&
@@ -191,18 +161,11 @@ export async function readiness(studentId, tx) {
   }
   return {
     eligible: Boolean(rule) && reasons.length === 0,
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
     total,
     days,
     rule,
     profile,
     reasons,
-<<<<<<< HEAD
-    records,
-    centres: [...new Set([...counted.values()].map((r) => r.centre))],
-  };
-}
-=======
     checks,
     records,
     centres,
@@ -210,7 +173,6 @@ export async function readiness(studentId, tx) {
   };
 }
 
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 export async function refreshReadiness(studentId, tx) {
   const result = await readiness(studentId, tx);
   if (result.eligible)

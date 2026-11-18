@@ -1,9 +1,6 @@
 import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
-=======
 import { dateTime } from '../lib/api.js';
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
 export function Heading({ eyebrow = 'YOUR AIKIDO JOURNEY', title, children }) {
   return (
     <div className="heading">
@@ -119,39 +116,15 @@ export function Metrics({ items }) {
 }
 export function ReadinessCard({ state }) {
   return (
-<<<<<<< HEAD
-    <Card title="Your next milestone">
-      <div className="row spread">
-        <h3>
-          {state.profile?.beltName || 'Unverified'} ·{' '}
-=======
     <Card title="Smart grading readiness">
       <div className="row spread">
         <h3>
           {state.profile?.beltName || 'Unverified'} →{' '}
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
           {state.rule?.targetBelt || 'Next rank'}
         </h3>
         <Badge>{state.eligible ? 'eligible' : 'not yet eligible'}</Badge>
       </div>
       <p>{state.rule?.label || 'No grading rule configured'}</p>
-<<<<<<< HEAD
-      <progress
-        max={state.rule?.minSessions || 1}
-        value={Math.min(state.total, state.rule?.minSessions || 1)}
-        aria-label="Qualifying training sessions"
-      />
-      <p>
-        <strong>
-          {state.total} / {state.rule?.minSessions || '—'}
-        </strong>{' '}
-        qualifying sessions - {state.days || 0} days in rank
-      </p>
-      {state.reasons.map((reason) => (
-        <p key={reason}>{reason}</p>
-      ))}
-      <Link className="text-link" to="/student/grading-applications">
-=======
       {state.rule && (
         <>
           <div className="row spread">
@@ -219,7 +192,6 @@ export function ReadinessCard({ state }) {
         className="text-link"
         to="/student/grading-applications"
       >
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
         View grading opportunities →
       </Link>
     </Card>

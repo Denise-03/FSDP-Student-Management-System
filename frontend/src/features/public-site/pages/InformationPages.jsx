@@ -75,15 +75,9 @@ export function GradingInfoPage() {
               {data.rules.map((rule) => (
                 <p key={rule.id}>
                   <Badge>{rule.label}</Badge>{' '}
-<<<<<<< HEAD
-                  {data.belts.find((b) => b.id === rule.fromBelt)?.name} ·{' '}
-                  {data.belts.find((b) => b.id === rule.toBelt)?.name}: {rule.minSessions}{' '}
-                  sessions and {rule.minDays} days.
-=======
                   {data.belts.find((b) => b.id === rule.fromBelt)?.name} - {' '}
                   {data.belts.find((b) => b.id === rule.toBelt)?.name}: {rule.minDays}{' '}
                   days ({rule.minMonths}{' months'}) and {rule.minSessions} sessions.
->>>>>>> c5b28f4fc52d4b9e5a47b1708d0253400fbe7e94
                 </p>
               ))}
               <p>
