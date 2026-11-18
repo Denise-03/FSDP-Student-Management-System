@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { dateTime } from '../lib/api.js';
 export function Heading({ eyebrow = 'YOUR AIKIDO JOURNEY', title, children }) {
   return (
     <div className="heading">
@@ -115,30 +116,82 @@ export function Metrics({ items }) {
 }
 export function ReadinessCard({ state }) {
   return (
-    <Card title="Your next milestone">
+    <Card title="Smart grading readiness">
       <div className="row spread">
         <h3>
-          {state.profile?.beltName || 'Unverified'} ·{' '}
+          {state.profile?.beltName || 'Unverified'} →{' '}
           {state.rule?.targetBelt || 'Next rank'}
         </h3>
         <Badge>{state.eligible ? 'eligible' : 'not yet eligible'}</Badge>
       </div>
       <p>{state.rule?.label || 'No grading rule configured'}</p>
-      <progress
-        max={state.rule?.minSessions || 1}
-        value={Math.min(state.total, state.rule?.minSessions || 1)}
-        aria-label="Qualifying training sessions"
-      />
-      <p>
-        <strong>
-          {state.total} / {state.rule?.minSessions || '—'}
-        </strong>{' '}
-        qualifying sessions - {state.days || 0} days in rank
-      </p>
-      {state.reasons.map((reason) => (
-        <p key={reason}>{reason}</p>
-      ))}
-      <Link className="text-link" to="/student/grading-applications">
+      {state.rule && (
+        <>
+          <div className="row spread">
+            <strong>Attendance requirement</strong>
+            <strong>
+              {state.total} / {state.rule.minSessions}
+            </strong>
+          </div>
+          <progress
+            max={state.rule.minSessions || 1}
+            value={Math.min(state.total, state.rule.minSessions || 1)}
+            aria-label="Qualifying training sessions"
+          />
+        </>
+      )}
+      <ul className="readiness-list">
+        {(state.checks || []).map((check) => (
+          <li key={check.code}>
+            <span
+              className={`readiness-mark ${check.met ? 'met' : 'unmet'}`}
+              aria-label={check.met ? 'Met' : 'Not met'}
+            >
+              {check.met ? '✓' : '✕'}
+            </span>
+            <span>
+              <strong>{check.label}</strong>
+              {!check.met && <small>{check.detail}</small>}
+            </span>
+            <span
+              className={`readiness-status ${
+                check.met ? 'passed' : 'failed'
+              }`}
+            >
+              {check.met ? 'Met' : 'Not met'}
+            </span>
+          </li>
+        ))}
+      </ul>
+      {state.performanceReviews?.length > 0 && (
+        <section className="instructor-feedback">
+          <h3>Instructor Feedback</h3>
+          {state.performanceReviews.map((review) => (
+            <div
+              className="list-row"
+              key={`${review.beltId}-${review.rankStart}`}
+            >
+              <div className="row spread">
+                <strong>{review.beltName} Performance Review</strong>
+                <Badge>{review.passed ? 'Performance confirmed' : 'Further training needed'}</Badge>
+              </div>
+              <p>{review.feedback}</p>
+              <small>
+                Reviewed by {review.instructorName} ·{' '}
+                {dateTime(review.updatedAt)}
+              </small>
+            </div>
+          ))}
+        </section>
+      )}
+      {!state.rule &&
+        state.reasons.map((reason) => (
+          <p key={reason}>{reason}</p>
+        ))}
+      <Link
+        className="text-link"
+        to="/student/grading-applications"
+      >
         View grading opportunities →
       </Link>
     </Card>

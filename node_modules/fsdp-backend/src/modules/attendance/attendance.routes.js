@@ -30,6 +30,35 @@ attendanceRouter.put('/sessions/:id', roles('instructor'), async (req, res) => {
     .parse(req.body);
   res.json(await markAttendance(req.user.id, req.params.id, data.studentId, data.status));
 });
+attendanceRouter.delete('/sessions/:id/:studentId', roles('instructor'), async (req, res) => {
+  const state = await transaction(async (tx) => {
+    const session = await assignedSession(req.user.id, req.params.id, tx);
+    const [record] = await query(
+      `SELECT id FROM fsdp_v5.AttendanceRecords
+       WHERE sessionId=@sessionId AND studentId=@studentId`,
+      {
+        sessionId: session.id,
+        studentId: req.params.studentId,
+      },
+      tx,
+    );
+    ensure(record, 404, 'Attendance record not found.');
+    await query(
+      'DELETE fsdp_v5.AttendanceRecords WHERE id=@id',
+      { id: record.id },
+      tx,
+    );
+    await audit(
+      req.user.id,
+      'attendance.removed',
+      record.id,
+      { sessionId: session.id, studentId: req.params.studentId },
+      tx,
+    );
+    return refreshReadiness(req.params.studentId, tx);
+  });
+  res.json({ message: 'Incorrect attendance record removed.', readiness: state });
+});
 attendanceRouter.post('/external', memberRoles, async (req, res) => {
   const data = z
     .object({

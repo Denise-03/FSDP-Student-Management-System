@@ -48,6 +48,11 @@ export function AdminDashboardPage() {
             'Cross-centre attendance and membership reporting.',
             '/admin/reports',
           ],
+          [
+            'Review grading applications',
+            'Approve or reject student grading applications.',
+            '/admin/grading-applications',
+          ],
         ].map(([title, text, to]) => (
           <Card title={title} key={to}>
             <p>{text}</p>
