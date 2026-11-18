@@ -3,13 +3,14 @@ import { z } from 'zod';
 import { query, transaction } from '../../core/config/database.js';
 import { roles } from '../../core/middleware/auth.js';
 import { ensure } from '../../core/errors/HttpError.js';
-import { id, audit } from '../../core/utils/records.js';
+import { id, audit, notify } from '../../core/utils/records.js';
 import {
   decideApplication,
   activateMembership,
 } from '../membership-enrolment/membershipEnrolment.service.js';
 export const adminDashboardRouter = Router();
 adminDashboardRouter.use(roles('admin'));
+
 adminDashboardRouter.get('/', async (req, res) => {
   const [metrics] = await query(`SELECT
     (SELECT COUNT(*) FROM fsdp_v5.MembershipApplications WHERE status='pending_review') pending,
@@ -18,6 +19,7 @@ adminDashboardRouter.get('/', async (req, res) => {
     (SELECT COUNT(*) FROM fsdp_v5.PaymentCharges WHERE status='pending') unpaidCharges`);
   res.json(metrics);
 });
+
 adminDashboardRouter.get('/applications', async (req, res) =>
   res.json(
     await query(`SELECT a.*,u.name,u.email
@@ -25,6 +27,7 @@ adminDashboardRouter.get('/applications', async (req, res) =>
   ORDER BY a.updatedAt DESC`),
   ),
 );
+
 adminDashboardRouter.get('/applications/:id', async (req, res) => {
   const [application] = await query(
     `SELECT a.*,u.name,u.email FROM fsdp_v5.MembershipApplications a
@@ -43,6 +46,7 @@ adminDashboardRouter.get('/applications/:id', async (req, res) => {
   );
   res.json({ application, documents, audit });
 });
+
 adminDashboardRouter.post('/applications/:id/decision', async (req, res) => {
   const data = z
     .object({
@@ -54,6 +58,7 @@ adminDashboardRouter.post('/applications/:id/decision', async (req, res) => {
     .parse(req.body);
   res.json(await decideApplication(req.user.id, req.params.id, data));
 });
+
 adminDashboardRouter.get('/members', async (req, res) =>
   res.json(
     await query(`SELECT u.id,u.name,u.email,p.phone,
@@ -62,6 +67,7 @@ adminDashboardRouter.get('/members', async (req, res) =>
   LEFT JOIN fsdp_v5.Dojos d ON d.id=p.dojoId JOIN fsdp_v5.BeltLevels b ON b.id=p.beltId ORDER BY u.name`),
   ),
 );
+
 adminDashboardRouter.get('/payments', async (req, res) =>
   res.json(
     await query(`SELECT c.*,u.name studentName,
@@ -69,6 +75,7 @@ adminDashboardRouter.get('/payments', async (req, res) =>
   LEFT JOIN fsdp_v5.PaymentAttempts a ON a.chargeId=c.id ORDER BY c.id`),
   ),
 );
+
 adminDashboardRouter.post('/charges/:id/waive', async (req, res) => {
   const { reason } = z
     .object({ reason: z.string().trim().min(10).max(1000) })
@@ -103,10 +110,9 @@ adminDashboardRouter.post('/charges/:id/waive', async (req, res) => {
     await activateMembership(charge.studentId, tx);
     await audit(req.user.id, 'charge.waived', charge.id, { reason }, tx);
   });
-  res.json({
-    message: 'Fee waiver recorded; membership activated. This is not a payment.',
-  });
+  res.json({ message: 'Fee waiver recorded; membership activated. This is not a payment.' });
 });
+
 adminDashboardRouter.get('/reports', async (req, res) => {
   const centres = await query(`SELECT d.id,d.name,
     (SELECT COUNT(*) FROM fsdp_v5.StudentProfiles p JOIN fsdp_v5.Memberships m ON m.userId=p.userId
@@ -123,17 +129,25 @@ adminDashboardRouter.get('/reports', async (req, res) => {
     FROM fsdp_v5.MembershipApplications GROUP BY CONVERT(char(7),COALESCE(submittedAt,updatedAt),126) ORDER BY month`);
   res.json({ centres, attendance, monthly });
 });
+
 adminDashboardRouter.get('/manage', async (req, res) => {
-  const [dojos, sessions, instructors, settings, rules, classTypes] = await Promise.all([
-    query('SELECT * FROM fsdp_v5.Dojos'),
-    query('SELECT * FROM fsdp_v5.ClassSessions ORDER BY startsAt DESC'),
-    query("SELECT id,name FROM fsdp_v5.Users WHERE role='instructor'"),
-    query('SELECT * FROM fsdp_v5.Settings'),
-    query('SELECT * FROM fsdp_v5.GradingRules'),
-    query('SELECT * FROM fsdp_v5.ClassTypes'),
-  ]);
-  res.json({ dojos, sessions, instructors, settings, rules, classTypes });
+  const [dojos, sessions, instructors, settings, rules, classTypes, requirements] =
+    await Promise.all([
+      query('SELECT * FROM fsdp_v5.Dojos'),
+      query('SELECT * FROM fsdp_v5.ClassSessions ORDER BY startsAt DESC'),
+      query("SELECT id,name FROM fsdp_v5.Users WHERE role='instructor'"),
+      query('SELECT * FROM fsdp_v5.Settings'),
+      query(`SELECT r.*, b1.name fromBeltName, b2.name toBeltName
+        FROM fsdp_v5.GradingRules r
+        JOIN fsdp_v5.BeltLevels b1 ON b1.id=r.fromBelt
+        JOIN fsdp_v5.BeltLevels b2 ON b2.id=r.toBelt
+        ORDER BY r.fromBelt`),
+      query('SELECT * FROM fsdp_v5.ClassTypes'),
+      query('SELECT * FROM fsdp_v5.GradingExtraRequirements ORDER BY type'),
+    ]);
+  res.json({ dojos, sessions, instructors, settings, rules, classTypes, requirements });
 });
+
 adminDashboardRouter.patch('/dojos/:id', async (req, res) => {
   const data = z
     .object({
@@ -152,6 +166,7 @@ adminDashboardRouter.patch('/dojos/:id', async (req, res) => {
   });
   res.json({ message: 'Dojo saved.' });
 });
+
 adminDashboardRouter.post('/sessions', async (req, res) => {
   const data = z
     .object({
@@ -198,6 +213,7 @@ adminDashboardRouter.post('/sessions', async (req, res) => {
   });
   res.status(201).json({ message: 'Class session created.' });
 });
+
 adminDashboardRouter.patch('/sessions/:id', async (req, res) => {
   const data = z
     .object({ active: z.boolean(), capacity: z.number().int().min(1).max(100) })
@@ -222,6 +238,7 @@ adminDashboardRouter.patch('/sessions/:id', async (req, res) => {
   });
   res.json({ message: 'Session saved.' });
 });
+
 adminDashboardRouter.patch('/settings/registration-fee', async (req, res) => {
   const { amount } = z
     .object({ amount: z.number().int().min(100).max(100000) })
@@ -234,10 +251,9 @@ adminDashboardRouter.patch('/settings/registration-fee', async (req, res) => {
     );
     await audit(req.user.id, 'fee.updated', 'registration_fee', { amount }, tx);
   });
-  res.json({
-    message: 'Future registration fee saved. Existing charges keep their approved price.',
-  });
+  res.json({ message: 'Future registration fee saved. Existing charges keep their approved price.' });
 });
+
 adminDashboardRouter.patch('/rules/:id', async (req, res) => {
   const data = z
     .object({
@@ -247,7 +263,7 @@ adminDashboardRouter.patch('/rules/:id', async (req, res) => {
     .parse(req.body);
   await transaction(async (tx) => {
     await query(
-      'UPDATE fsdp_v5.GradingRules SET minSessions=@minSessions,minDays=@minDays WHERE id=@id',
+      'UPDATE fsdp_v5.GradingRules SET minSessions=@minSessions,minDays=@minDays,minMonths=FLOOR(@minDays / 30) WHERE id=@id',
       { ...data, id: req.params.id },
       tx,
     );
@@ -255,3 +271,230 @@ adminDashboardRouter.patch('/rules/:id', async (req, res) => {
   });
   res.json({ message: 'Rule saved. Readiness refreshes from the stored rule.' });
 });
+
+const extraRuleSchema = z.object({
+  type: z.enum(['performance', 'membership_days', 'training_centres']),
+  requiredValue: z.number().int(),
+});
+function validateExtraRule({ type, requiredValue }) {
+  ensure(
+    (type === 'performance' && requiredValue === 1) ||
+    (type === 'membership_days' && requiredValue >= 0 && requiredValue <= 365) ||
+    (type === 'training_centres' && requiredValue >= 1 && requiredValue <= 10),
+    400,
+    'Invalid requirement: performance must be 1; membership days 0–365; centres 1–10.',
+  );
+}
+
+adminDashboardRouter.put('/rules/:id/additional', async (req, res) => {
+  const data = extraRuleSchema.parse(req.body);
+  validateExtraRule(data);
+  await transaction(async (tx) => {
+    const [rule] = await query(
+      'SELECT id FROM fsdp_v5.GradingRules WHERE id=@id',
+      { id: req.params.id },
+      tx,
+    );
+    ensure(rule, 404, 'Grading transition not found.');
+    await query(
+      `IF EXISTS (
+         SELECT 1 FROM fsdp_v5.GradingExtraRequirements
+         WHERE ruleId=@ruleId AND type=@type
+       )
+         UPDATE fsdp_v5.GradingExtraRequirements
+         SET requiredValue=@requiredValue
+         WHERE ruleId=@ruleId AND type=@type;
+       ELSE
+         INSERT fsdp_v5.GradingExtraRequirements(id,ruleId,type,requiredValue)
+         VALUES(@id,@ruleId,@type,@requiredValue);`,
+      {
+        ...data,
+        id: id(),
+        ruleId: req.params.id,
+      },
+      tx,
+    );
+    await audit(req.user.id, 'grading.extra.saved', req.params.id, data, tx);
+  });
+  res.json({ message: 'Additional requirement saved for this belt transition.' });
+});
+
+adminDashboardRouter.delete('/rules/:id/additional/:type', async (req, res) => {
+  const type = z
+    .enum(['performance', 'membership_days', 'training_centres'])
+    .parse(req.params.type);
+  await transaction(async (tx) => {
+    const [existing] = await query(
+      `SELECT id FROM fsdp_v5.GradingExtraRequirements
+       WHERE ruleId=@ruleId AND type=@type`,
+      { ruleId: req.params.id, type },
+      tx,
+    );
+    ensure(existing, 404, 'Additional requirement not found.');
+    await query(
+      'DELETE fsdp_v5.GradingExtraRequirements WHERE id=@id',
+      { id: existing.id },
+      tx,
+    );
+    await audit(
+      req.user.id,
+      'grading.extra.removed',
+      req.params.id,
+      { type },
+      tx,
+    );
+  });
+  res.json({ message: 'Additional requirement removed.' });
+});
+adminDashboardRouter.get('/grading-applications', async (req, res) => {
+  res.json(
+    await query(`
+      SELECT
+        g.id,
+        g.studentId,
+        g.gradingSessionId,
+        g.status,
+        g.createdAt,
+        g.decisionReason,
+        g.reviewedAt,
+
+        u.name studentName,
+        u.email,
+
+        s.name sessionName,
+        s.startsAt,
+        s.venue,
+
+        p.beltId currentBelt,
+        currentBelt.name currentGrade,
+        targetBelt.name targetGrade,
+
+        a.result instructorRecommendation,
+        a.feedback instructorFeedback,
+        a.acknowledgement instructorAcknowledgement,
+        a.submittedAt assessedAt
+
+      FROM fsdp_v5.GradingApplications g
+
+      JOIN fsdp_v5.Users u
+        ON u.id = g.studentId
+
+      JOIN fsdp_v5.GradingSessions s
+        ON s.id = g.gradingSessionId
+
+      JOIN fsdp_v5.StudentProfiles p
+        ON p.userId = g.studentId
+
+      JOIN fsdp_v5.BeltLevels currentBelt
+        ON currentBelt.id = p.beltId
+
+      OUTER APPLY (
+      SELECT TOP 1 nextBelt.name
+      FROM fsdp_v5.GradingRules AS gr
+      JOIN fsdp_v5.BeltLevels AS nextBelt
+      ON nextBelt.id = gr.toBelt
+      WHERE gr.fromBelt = p.beltId
+      ORDER BY gr.minAge
+      ) targetBelt
+
+      LEFT JOIN fsdp_v5.InstructorAssessments a
+        ON a.gradingApplicationId = g.id
+
+      ORDER BY
+        CASE WHEN g.status = 'pending' THEN 0 ELSE 1 END,
+        g.createdAt DESC
+    `),
+  );
+});
+adminDashboardRouter.post(
+  '/grading-applications/:id/decision',
+  async (req, res) => {
+    const data = z
+      .object({
+        decision: z.enum(['approved', 'rejected']),
+        reason: z.string().trim().max(1000).default(''),
+      })
+      .parse(req.body);
+
+    await transaction(async (tx) => {
+      const [application] = await query(
+        `SELECT
+          g.id,
+          g.studentId,
+          g.status,
+          s.name sessionName
+
+        FROM fsdp_v5.GradingApplications g
+
+        JOIN fsdp_v5.GradingSessions s
+          ON s.id = g.gradingSessionId
+
+        WHERE g.id = @id`,
+        { id: req.params.id },
+        tx,
+      );
+
+      ensure(
+        application,
+        404,
+        'Grading application not found.',
+      );
+
+      ensure(
+        application.status === 'pending',
+        409,
+        'This application has already been reviewed.',
+      );
+
+      await query(
+        `UPDATE fsdp_v5.GradingApplications
+
+        SET
+          status = @decision,
+          decisionReason = @reason,
+          reviewedBy = @reviewedBy,
+          reviewedAt = SYSUTCDATETIME()
+
+        WHERE id = @id
+          AND status = 'pending'`,
+        {
+          id: application.id,
+          decision: data.decision,
+          reason: data.reason || null,
+          reviewedBy: req.user.id,
+        },
+        tx,
+      );
+
+      const statusLabel =
+        data.decision === 'approved'
+          ? 'approved'
+          : 'rejected';
+
+      const reasonText = data.reason
+        ? ` Reason: ${data.reason}`
+        : '';
+
+      await notify(
+        application.studentId,
+        `grading-decision:${application.id}:${data.decision}`,
+        `Your grading application for ${application.sessionName} has been ${statusLabel}.${reasonText}`,
+        tx,
+        'grading_application',
+        application.id,
+      );
+
+      await audit(
+        req.user.id,
+        `grading.application.${data.decision}`,
+        application.id,
+        data,
+        tx,
+      );
+    });
+
+    res.json({
+      message: `Grading application ${data.decision}.`,
+    });
+  },
+);

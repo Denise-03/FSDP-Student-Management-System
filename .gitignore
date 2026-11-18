@@ -1,23 +1,16 @@
-# Node.js dependencies
 node_modules/
-
-# Environment variables
 .env
 .env.*
 !.env.example
-
-# Build files
 dist/
-
-# Test output
-test-results/
-playwright-report/
-coverage/
-
-# Logs
-*.log
-
-# Duplicate folders inside frontend
+**/dist/
+backend/uploads/synthetic-training.pdf
 /frontend/database/
 /frontend/docs/
 /frontend/design-reference/
+backend/.env
+**/uploads/
+test-results/
+playwright-report/
+*.zip
+*.log

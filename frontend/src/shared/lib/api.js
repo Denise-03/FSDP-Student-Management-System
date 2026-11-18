@@ -14,10 +14,16 @@ export async function api(path, options = {}) {
     },
     ...(options.body && !form ? { body: JSON.stringify(options.body) } : {}),
   });
-  const data = await response
-    .json()
-    .catch(() => ({ message: 'The server returned an unreadable response.' }));
-  if (!response.ok) throw new Error(data.message || `Request failed (${response.status}).`);
+    const data = await response.json().catch(() => ({
+    message:
+      response.status >= 500
+        ? 'The backend server is temporarily unavailable. Please try again shortly.'
+        : 'The server returned an unreadable response.',
+      }));
+    if (!response.ok)
+      throw new Error(
+        data.message || `Request failed (${response.status}).`
+    );
   return data;
 }
 export const mutate = (path, body, method = 'POST') => api(path, { method, body });
