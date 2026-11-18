@@ -41,6 +41,21 @@ export default function InstructorTakeAttendancePage() {
                         Mark {status}
                       </Action>
                     ))}
+                    {student.status && (
+                      <Action
+                        className="secondary"
+                        onDone={resource.reload}
+                        run={() =>
+                          mutate(
+                            `/attendance/sessions/${sessionId}/${student.id}`,
+                            undefined,
+                            'DELETE',
+                          )
+                        }
+                      >
+                        Remove incorrect record
+                      </Action>
+                    )}
                   </div>
                 </div>
               ))
