@@ -11,6 +11,17 @@ Prerequisites: Node.js 22.12+ (tested with 25.4.0), npm, SQL Server Express or D
 Microsoft ODBC Driver 17 for SQL Server, and a Windows login allowed to create objects
 in FSDPDevelopment. Python 3 is needed only for the ZIP command.
 
+The default Windows connection is `localhost\SQLEXPRESS` using integrated authentication
+through one mssql/msnodesqlv8 pool. No database password is required for that mode.
+If FSDPDevelopment does not exist, create it once in SSMS using:
+
+```sql
+IF DB_ID(N'FSDPDevelopment') IS NULL
+  EXEC(N'CREATE DATABASE FSDPDevelopment');
+```
+
+Then run these commands in your terminal:
+
 ```powershell
 cd FSDP-Student-Management-System
 npm install
@@ -25,15 +36,6 @@ npm run dev
 Open **http://127.0.0.1:5173**. API: **http://127.0.0.1:4000/api/health**.
 Use 127.0.0.1 consistently for cookie/origin handling. The API binds to loopback only.
 Vite proxies /api to Express. Stop both development servers with Ctrl+C.
-
-The default Windows connection is `localhost\SQLEXPRESS` using integrated authentication
-through one mssql/msnodesqlv8 pool. No database password is required for that mode.
-If FSDPDevelopment does not exist, create it once in SSMS using:
-
-```sql
-IF DB_ID(N'FSDPDevelopment') IS NULL
-  EXEC(N'CREATE DATABASE FSDPDevelopment');
-```
 
 All prototype objects live in **fsdp_v5**, preserving unrelated schemas and tables.
 Migrations are ordered, checksum tracked and transactional. Startup never resets data.
