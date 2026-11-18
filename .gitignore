@@ -6,6 +6,7 @@ dist/
 **/dist/
 backend/uploads/*
 frontend/node_modules/*
+frontend/node_modules/.vite/deps/*
 /frontend/database/
 /frontend/docs/
 /frontend/design-reference/
