@@ -1,11 +1,7 @@
 import { useResource } from '../../../shared/hooks/useResource.js';
 import { Heading, Resource, ReadinessCard, Card } from '../../../shared/components/ui.jsx';
 export default function GradingReadinessPage() {
-<<<<<<< HEAD
   const resource = useResource('/readiness', 5000);
-=======
-  const resource = useResource('/readiness');
->>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
   return (
     <>
       <Heading title="See how far you’ve come.">

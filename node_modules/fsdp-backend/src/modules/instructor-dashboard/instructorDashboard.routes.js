@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { query, transaction } from '../../core/config/database.js';
 import { roles } from '../../core/middleware/auth.js';
 import { readiness } from '../grading-readiness/gradingReadiness.service.js';
+<<<<<<< HEAD
 import { z } from 'zod';
 import { ensure } from '../../core/errors/HttpError.js';
 import { audit } from '../../core/utils/records.js';
@@ -10,6 +11,10 @@ import { refreshReadiness } from '../grading-readiness/gradingReadiness.service.
 export const instructorDashboardRouter = Router();
 instructorDashboardRouter.use(roles('instructor'));
 
+=======
+export const instructorDashboardRouter = Router();
+instructorDashboardRouter.use(roles('instructor'));
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
 instructorDashboardRouter.get('/', async (req, res) => {
   const sessions = await query(
     `SELECT s.*,c.name className,d.name dojoName,
@@ -62,6 +67,7 @@ instructorDashboardRouter.post('/students/:id/follow-up', async (req, res) => {
   });
   res.json({ message: 'A supportive in-app reminder is saved (one per month).' });
 });
+<<<<<<< HEAD
 
 instructorDashboardRouter.put('/students/:id/performance', async (req, res) => {
   const data = z.object({
@@ -116,3 +122,5 @@ instructorDashboardRouter.put('/students/:id/performance', async (req, res) => {
   });
   res.json({ message: 'Performance review saved.', readiness: readinessState });
 });
+=======
+>>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2

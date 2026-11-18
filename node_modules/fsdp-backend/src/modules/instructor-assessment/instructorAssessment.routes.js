@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import { z } from 'zod';
 import { query, transaction } from '../../core/config/database.js';
@@ -55,7 +54,6 @@ instructorAssessmentRouter.post('/:id', async (req, res) => {
       acknowledgement: z.string().trim().min(2).max(120),
     })
     .parse(req.body);
-
   ensure(
     data.acknowledgement === req.user.name,
     400,

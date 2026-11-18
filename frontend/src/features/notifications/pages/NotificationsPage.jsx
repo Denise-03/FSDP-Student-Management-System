@@ -7,10 +7,7 @@ import {
   Badge,
   Empty,
 } from '../../../shared/components/ui.jsx';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
-=======
->>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
 import { mutate, dateTime } from '../../../shared/lib/api.js';
 export default function NotificationsPage() {
   const resource = useResource('/notifications');
@@ -30,7 +27,6 @@ export default function NotificationsPage() {
                     <Badge>{n.readAt ? 'Read' : 'Unread'}</Badge>
                   </div>
                   <small>{dateTime(n.createdAt)}</small>
-<<<<<<< HEAD
                   {n.relatedType === 'grading_application' && n.relatedId && (
                   <p>
                 <Link className="text-link" to={`/student/grading-applications#application-${n.relatedId}`}>
@@ -48,17 +44,6 @@ export default function NotificationsPage() {
                   Mark as read
                   </Action>
                 )}
-=======
-                  {!n.readAt && (
-                    <Action
-                      className="secondary"
-                      run={() => mutate(`/notifications/${n.id}/read`, {}, 'PATCH')}
-                      onDone={resource.reload}
-                    >
-                      Mark as read
-                    </Action>
-                  )}
->>>>>>> 9ae1f96d3ab84d0cac50e53b0bfbe3ea036f12f2
                 </Card>
               ))
             ) : (

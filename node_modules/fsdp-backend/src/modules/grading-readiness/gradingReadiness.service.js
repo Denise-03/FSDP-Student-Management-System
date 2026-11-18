@@ -41,7 +41,6 @@ export async function readiness(studentId, tx) {
     { studentId },
     tx,
   );
-
   const counted = new Map();
   for (const record of records) {
     if (
