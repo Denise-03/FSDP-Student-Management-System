@@ -20,54 +20,18 @@ IF COL_LENGTH('fsdp_v5.GradingSessions', 'venue') IS NULL
     ADD venue nvarchar(250) NULL;
 GO
 
--- Remove the old status constraint before changing existing values
-IF EXISTS (
-    SELECT 1
-    FROM sys.check_constraints
-    WHERE parent_object_id = OBJECT_ID('fsdp_v5.GradingApplications')
-      AND name = 'CK__GradingAp__statu__43D61337'
-)
-    ALTER TABLE fsdp_v5.GradingApplications
-    DROP CONSTRAINT [CK__GradingAp__statu__43D61337];
-GO
 
--- Convert existing application statuses
-UPDATE fsdp_v5.GradingApplications
-SET status = 'pending'
-WHERE status IN ('submitted', 'assessed');
-GO
+-- Remove ALL existing CHECK constraints that reference status.
+DECLARE @dropStatusConstraints NVARCHAR(MAX) = N'';
 
--- Add the new status constraint if it does not already exist
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.check_constraints
-    WHERE parent_object_id = OBJECT_ID('fsdp_v5.GradingApplications')
-      AND name = 'CK_GradingApplications_Status'
-)
-    ALTER TABLE fsdp_v5.GradingApplications
-    ADD CONSTRAINT CK_GradingApplications_Status
-    CHECK (status IN ('pending', 'approved', 'rejected'));
-GO
+SELECT @dropStatusConstraints +=
+    N'ALTER TABLE fsdp_v5.GradingApplications DROP CONSTRAINT '
+    + QUOTENAME(cc.name) + N';'
+FROM sys.check_constraints cc
+WHERE cc.parent_object_id =
+    OBJECT_ID('fsdp_v5.GradingApplications')
+AND cc.definition LIKE '%status%';
 
--- Add notification relationship fields
-IF COL_LENGTH('fsdp_v5.Notifications', 'relatedType') IS NULL
-    ALTER TABLE fsdp_v5.Notifications
-    ADD relatedType nvarchar(50) NULL;
-GO
-
-IF COL_LENGTH('fsdp_v5.Notifications', 'relatedId') IS NULL
-    ALTER TABLE fsdp_v5.Notifications
-    ADD relatedId nvarchar(50) NULL;
-GO
-
--- Prevent duplicate active applications while allowing reapplication after rejection
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.indexes
-    WHERE object_id = OBJECT_ID('fsdp_v5.GradingApplications')
-      AND name = 'UX_GradingApplications_Active'
-)
-    CREATE UNIQUE INDEX UX_GradingApplications_Active
-    ON fsdp_v5.GradingApplications(studentId, gradingSessionId)
-    WHERE status <> 'rejected';
+IF @dropStatusConstraints <> N''
+    EXEC sp_executesql @dropStatusConstraints;
 GO

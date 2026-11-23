@@ -1,45 +1,50 @@
 
--- Remove any remaining legacy grading status constraints.
-DECLARE @sql nvarchar(max) = N'';
+-- Migration 007: Fix grading application status
 
-SELECT @sql = @sql +
-    N'ALTER TABLE fsdp_v5.GradingApplications DROP CONSTRAINT '
-    + QUOTENAME(name) + N';'
+-- Drop the existing status CHECK constraint.
+DECLARE @checkName sysname;
+
+SELECT TOP 1 @checkName = name
 FROM sys.check_constraints
 WHERE parent_object_id = OBJECT_ID('fsdp_v5.GradingApplications')
-  AND definition LIKE '%''submitted''%'
-  AND definition LIKE '%''assessed''%';
+  AND definition LIKE '%status%';
 
-IF @sql <> N''
-    EXEC sp_executesql @sql;
-GO
-
--- Find and remove the original default constraint on status.
-DECLARE @defaultConstraint sysname;
-
-SELECT @defaultConstraint = dc.name
-FROM sys.default_constraints dc
-JOIN sys.columns c
-    ON c.object_id = dc.parent_object_id
-    AND c.column_id = dc.parent_column_id
-WHERE dc.parent_object_id =
-    OBJECT_ID('fsdp_v5.GradingApplications')
-    AND c.name = 'status';
-
-IF @defaultConstraint IS NOT NULL
+IF @checkName IS NOT NULL
 BEGIN
-    DECLARE @sql nvarchar(max);
-
-    SET @sql =
-        N'ALTER TABLE fsdp_v5.GradingApplications DROP CONSTRAINT '
-        + QUOTENAME(@defaultConstraint);
-
-    EXEC sp_executesql @sql;
+    EXEC('ALTER TABLE fsdp_v5.GradingApplications DROP CONSTRAINT [' 
+         + @checkName + ']');
 END;
-GO
 
--- Set the correct default status.
-ALTER TABLE fsdp_v5.GradingApplications
-ADD CONSTRAINT DF_GradingApplications_Status
-DEFAULT ('pending') FOR status;
-GO
+-- Convert legacy statuses.
+UPDATE fsdp_v5.GradingApplications
+SET status = 'pending'
+WHERE status IN ('submitted', 'assessed');
+
+-- Add the correct CHECK constraint if missing.
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.check_constraints
+    WHERE parent_object_id = OBJECT_ID('fsdp_v5.GradingApplications')
+      AND name = 'CK_GradingApplications_Status'
+)
+BEGIN
+    ALTER TABLE fsdp_v5.GradingApplications
+    ADD CONSTRAINT CK_GradingApplications_Status
+    CHECK (status IN ('pending', 'approved', 'rejected'));
+END;
+
+-- Add the correct default if missing.
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.default_constraints dc
+    JOIN sys.columns c
+      ON c.object_id = dc.parent_object_id
+     AND c.column_id = dc.parent_column_id
+    WHERE dc.parent_object_id = OBJECT_ID('fsdp_v5.GradingApplications')
+      AND c.name = 'status'
+)
+BEGIN
+    ALTER TABLE fsdp_v5.GradingApplications
+    ADD CONSTRAINT DF_GradingApplications_Status
+    DEFAULT ('pending') FOR status;
+END;
