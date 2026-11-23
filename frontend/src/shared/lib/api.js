@@ -17,7 +17,7 @@ export async function api(path, options = {}) {
     const data = await response.json().catch(() => ({
     message:
       response.status >= 500
-        ? 'The backend server is temporarily unavailable. Please try again shortly.'
+        ? 'The backend server is temporarily unavailable. Please try again.'
         : 'The server returned an unreadable response.',
       }));
     if (!response.ok)
