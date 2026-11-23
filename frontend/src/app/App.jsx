@@ -1,44 +1,48 @@
-import { Routes, Route, Link } from 'react-router-dom';
-import SiteLayout from '../shared/layouts/SiteLayout.jsx';
-import { RoleGuard } from './routes.jsx';
-import HomePage from '../features/public-site/pages/HomePage.jsx';
+import { Routes, Route, Link } from "react-router-dom";
+import SiteLayout from "../shared/layouts/SiteLayout.jsx";
+import { RoleGuard } from "./routes.jsx";
+import HomePage from "../features/public-site/pages/HomePage.jsx";
 import {
   AboutPage,
   GradingInfoPage,
   FeesPage,
   HowToJoinPage,
-} from '../features/public-site/pages/InformationPages.jsx';
+} from "../features/public-site/pages/InformationPages.jsx";
 import {
   ClassesPage,
   ClassDetailsPage,
   DojosPage,
   BookClassesPage,
   MyBookingsPage,
-} from '../features/dojos-classes/pages/ClassesPages.jsx';
-import AuthPage from '../features/authentication/pages/AuthPage.jsx';
-import EnrolmentPage from '../features/membership-enrolment/pages/EnrolmentPage.jsx';
-import ApplicationStatusPage from '../features/membership-enrolment/pages/ApplicationStatusPage.jsx';
-import StudentDashboardPage from '../features/student-dashboard/pages/StudentDashboardPage.jsx';
-import StudentAttendanceHistoryPage from '../features/attendance/pages/StudentAttendanceHistoryPage.jsx';
-import InstructorTakeAttendancePage from '../features/attendance/pages/InstructorTakeAttendancePage.jsx';
-import GradingReadinessPage from '../features/grading-readiness/pages/GradingReadinessPage.jsx';
-import GradingApplicationsPage from '../features/grading-applications/pages/GradingApplicationsPage.jsx';
-import NotificationsPage from '../features/notifications/pages/NotificationsPage.jsx';
-import ProfilePage from '../features/student-profiles/pages/ProfilePage.jsx';
-import PaymentsPage from '../features/payments/pages/PaymentsPage.jsx';
+} from "../features/dojos-classes/pages/ClassesPages.jsx";
+import AuthPage from "../features/authentication/pages/AuthPage.jsx";
+import EnrolmentPage from "../features/membership-enrolment/pages/EnrolmentPage.jsx";
+import ApplicationStatusPage from "../features/membership-enrolment/pages/ApplicationStatusPage.jsx";
+import StudentDashboardPage from "../features/student-dashboard/pages/StudentDashboardPage.jsx";
+import StudentAttendanceHistoryPage from "../features/attendance/pages/StudentAttendanceHistoryPage.jsx";
+import InstructorTakeAttendancePage from "../features/attendance/pages/InstructorTakeAttendancePage.jsx";
+import GradingReadinessPage from "../features/grading-readiness/pages/GradingReadinessPage.jsx";
+import GradingApplicationsPage from "../features/grading-applications/pages/GradingApplicationsPage.jsx";
+import NotificationsPage from "../features/notifications/pages/NotificationsPage.jsx";
+import ProfilePage from "../features/student-profiles/pages/ProfilePage.jsx";
+import PaymentsPage from "../features/payments/pages/PaymentsPage.jsx";
 import {
   InstructorDashboardPage,
   StudentProgressPage,
-} from '../features/instructor-dashboard/pages/InstructorDashboardPages.jsx';
-import InstructorAssessmentsPage from '../features/instructor-assessment/pages/InstructorAssessmentsPage.jsx';
+} from "../features/instructor-dashboard/pages/InstructorDashboardPages.jsx";
+import InstructorAssessmentsPage from "../features/instructor-assessment/pages/InstructorAssessmentsPage.jsx";
 import {
   AdminDashboardPage,
   MembersPage,
   CentreReportsPage,
   AdminPaymentsPage,
-} from '../features/admin-dashboard/pages/AdminOverviewPages.jsx';
-import ApplicationReviewsPage from '../features/admin-dashboard/pages/ApplicationReviewsPage.jsx';
-import ManageClassesPage from '../features/admin-dashboard/pages/ManageClassesPage.jsx';
+} from "../features/admin-dashboard/pages/AdminOverviewPages.jsx";
+import ApplicationReviewsPage from "../features/admin-dashboard/pages/ApplicationReviewsPage.jsx";
+import ManageClassesPage from "../features/admin-dashboard/pages/ManageClassesPage.jsx";
+import FamilyDayPage from "../features/family-day/pages/FamilyDayPage.jsx";
+import FamilyDayEventPage from "../features/family-day/pages/FamilyDayEventPage.jsx";
+import FamilyDayRegisterPage from "../features/family-day/pages/FamilyDayRegisterPage.jsx";
+import FamilyDayManagePage from "../features/family-day/pages/FamilyDayManagePage.jsx";
 export default function App() {
   return (
     <Routes>
@@ -51,40 +55,65 @@ export default function App() {
         <Route path="/grading-info" element={<GradingInfoPage />} />
         <Route path="/fees" element={<FeesPage />} />
         <Route path="/how-to-join" element={<HowToJoinPage />} />
+        <Route path="/family-day" element={<FamilyDayEventPage />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/register" element={<AuthPage register />} />
-        <Route element={<RoleGuard allowed={['applicant', 'student']} />}>
+        <Route element={<RoleGuard allowed={["applicant", "student"]} />}>
           <Route path="/enrolment" element={<EnrolmentPage />} />
           <Route path="/enrolment/status" element={<ApplicationStatusPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
           <Route path="/payments/result" element={<PaymentsPage result />} />
         </Route>
-        <Route element={<RoleGuard allowed={['student']} />}>
+        <Route element={<RoleGuard allowed={["student"]} />}>
           <Route path="/student" element={<StudentDashboardPage />} />
           <Route path="/student/classes" element={<BookClassesPage />} />
           <Route path="/student/bookings" element={<MyBookingsPage />} />
-          <Route path="/student/attendance" element={<StudentAttendanceHistoryPage />} />
-          <Route path="/student/grading-readiness" element={<GradingReadinessPage />} />
+          <Route
+            path="/student/attendance"
+            element={<StudentAttendanceHistoryPage />}
+          />
+          <Route
+            path="/student/grading-readiness"
+            element={<GradingReadinessPage />}
+          />
           <Route
             path="/student/grading-applications"
             element={<GradingApplicationsPage />}
           />
-          <Route path="/student/notifications" element={<NotificationsPage />} />
+          <Route
+            path="/student/notifications"
+            element={<NotificationsPage />}
+          />
           <Route path="/student/membership" element={<PaymentsPage />} />
           <Route path="/student/profile" element={<ProfilePage />} />
+          <Route path="/student/family-day" element={<FamilyDayPage />} />
+          <Route
+            path="/family-day/register"
+            element={<FamilyDayRegisterPage />}
+          />
+          <Route path="/family-day/manage" element={<FamilyDayManagePage />} />
         </Route>
-        <Route element={<RoleGuard allowed={['instructor']} />}>
+        <Route element={<RoleGuard allowed={["instructor"]} />}>
           <Route path="/instructor" element={<InstructorDashboardPage />} />
           <Route
             path="/instructor/classes/:sessionId/attendance"
             element={<InstructorTakeAttendancePage />}
           />
-          <Route path="/instructor/students" element={<StudentProgressPage />} />
-          <Route path="/instructor/assessments" element={<InstructorAssessmentsPage />} />
+          <Route
+            path="/instructor/students"
+            element={<StudentProgressPage />}
+          />
+          <Route
+            path="/instructor/assessments"
+            element={<InstructorAssessmentsPage />}
+          />
         </Route>
-        <Route element={<RoleGuard allowed={['admin']} />}>
+        <Route element={<RoleGuard allowed={["admin"]} />}>
           <Route path="/admin" element={<AdminDashboardPage />} />
-          <Route path="/admin/enrolments" element={<ApplicationReviewsPage />} />
+          <Route
+            path="/admin/enrolments"
+            element={<ApplicationReviewsPage />}
+          />
           <Route path="/admin/members" element={<MembersPage />} />
           <Route path="/admin/reports" element={<CentreReportsPage />} />
           <Route path="/admin/manage" element={<ManageClassesPage />} />
