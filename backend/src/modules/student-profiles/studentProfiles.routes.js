@@ -2,6 +2,9 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { memberRoles } from '../../core/middleware/auth.js';
 import { query } from '../../core/config/database.js';
+import { ageOn } from '../../core/utils/records.js';
+// Stakeholder rule: at 13 a child moves to the adult class.
+const ADULT_CLASS_AGE = 13;
 export const studentProfilesRouter = Router();
 studentProfilesRouter.use(memberRoles);
 studentProfilesRouter.get('/', async (req, res) => {
@@ -14,7 +17,10 @@ studentProfilesRouter.get('/', async (req, res) => {
     LEFT JOIN fsdp_v5.Memberships m ON m.userId=p.userId WHERE p.userId=@userId`,
     { userId: req.user.id },
   );
-  res.json(profile);
+  // Worked out from date of birth, so the move to adult is automatic.
+  const age = ageOn(profile?.dateOfBirth);
+  const classType = age >= ADULT_CLASS_AGE ? 'Adult' : age >= 0 ? 'Child' : null;
+  res.json({ ...profile, classType });
 });
 studentProfilesRouter.patch('/', async (req, res) => {
   const data = z

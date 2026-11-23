@@ -52,6 +52,7 @@ function ProfileForm({ profile, onDone }) {
           {[
             ['Membership number', profile.memberNumber],
             ['Principal dojo', profile.dojoName],
+            ['Class type', profile.classType],
             [
               'Verified belt',
               profile.verified ? profile.beltName : 'Awaiting verification',
@@ -64,6 +65,10 @@ function ProfileForm({ profile, onDone }) {
             </div>
           ))}
         </dl>
+        <p>
+          Once you have reached 13 years of age, you will be automatically
+          transferred to the adult class.
+        </p>
         <p>Verified rank and membership fields are maintained through authorised review.</p>
       </Card>
     </div>
